@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al'Ponte — Menu & Lounge</title>
+  <style>
+    :root {
+      --bg-color: #0d0a12;
+      --card-bg: rgba(20, 14, 28, 0.92);
+      --accent-color: #e01e84;
+      --accent-gold: #f26522;
+      --text-main: #f0f0f0;
+      --text-muted: #b8a6c4;
+      --success-green: #25D366;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      padding: 20px 10px 80px 10px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(42, 8, 51, 0.85) 0%, rgba(13, 10, 18, 0.92) 80%);
+      z-index: 0;
+    }
+
+    #lang-modal, #cart-modal, #upsell-modal {
+      position: fixed; inset: 0;
+      background: rgba(10, 7, 15, 0.95);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 2000; padding: 20px;
+    }
+
+    #cart-modal, #upsell-modal { display: none; }
+
+    .start-card {
+      position: relative; z-index: 2;
+      background: var(--card-bg);
+      padding: 25px 20px; border-radius: 24px;
+      text-align: center; max-width: 480px; width: 100%;
+      border: 1px solid rgba(224, 30, 132, 0.5);
+      max-height: 90vh; overflow-y: auto;
+    }
+
+    .brand-logo { font-size: 32px; font-weight: 900; letter-spacing: 4px; color: #fff; text-shadow: 0 0 15px var(--accent-color); }
+    .brand-tag { font-size: 11px; color: var(--accent-gold); letter-spacing: 3px; margin-bottom: 18px; }
+
+    .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+    .lang-btn {
+      padding: 12px; background: rgba(224, 30, 132, 0.15);
+      border: 1px solid var(--accent-color); color: #fff;
+      border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .lang-btn:hover { background: var(--accent-color); }
+
+    .menu-page {
+      position: relative; z-index: 2;
+      background: var(--card-bg);
+      width: 100%; max-width: 950px; padding: 20px;
+      border-radius: 24px; border: 1px solid rgba(224, 30, 132, 0.25);
+      display: none;
+    }
+
+    .review-banner {
+      background: linear-gradient(135deg, rgba(242, 101, 34, 0.15), rgba(224, 30, 132, 0.15));
+      border: 1px solid rgba(242, 101, 34, 0.4);
+      border-radius: 16px; padding: 12px 16px; margin-bottom: 20px;
+      text-align: left; font-size: 12px; color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .review-banner-btn {
+      background: var(--accent-gold); color: #fff; border: none; padding: 8px 14px;
+      border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block;
+    }
+
+    .discount-progress-box {
+      background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: left;
+    }
+    .progress-bar-bg { background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .progress-bar-fill { background: linear-gradient(90deg, var(--accent-gold), var(--success-green)); height: 100%; width: 0%; transition: width 0.3s; }
+
+    .top-controls { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+    .tabs { display: flex; gap: 8px; }
+    .tab-btn { background: transparent; border: none; font-size: 15px; font-weight: bold; cursor: pointer; color: var(--text-muted); padding: 8px 16px; border-radius: 10px; }
+    .tab-btn.active { color: #fff; background: var(--accent-color); }
+
+    .change-lang-trigger {
+      background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(224, 30, 132, 0.4);
+      color: #fff; padding: 8px 14px; border-radius: 12px; font-size: 12px; cursor: pointer;
+    }
+
+    .search-box { flex-grow: 1; max-width: 260px; }
+    .search-box input { width: 100%; padding: 9px 16px; border-radius: 20px; border: 1px solid rgba(224, 30, 132, 0.4); background: rgba(0,0,0,0.5); color: #fff; font-size: 13px; outline: none; }
+
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .category { background: rgba(0, 0, 0, 0.3); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+    .category-title { font-size: 15px; text-align: center; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; color: var(--accent-gold); }
+
+    .menu-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    .item-names { flex-grow: 1; }
+    .name-main { font-weight: 600; color: #fff; font-size: 13px; }
+    .item-price { font-weight: bold; color: var(--accent-color); font-size: 13px; white-space: nowrap; margin-right: 6px; }
+
+    .add-cart-btn { background: var(--accent-color); color: #fff; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+    .cart-bar {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--accent-color); color: #fff; padding: 12px 24px;
+      border-radius: 30px; font-weight: bold; cursor: pointer; z-index: 1000;
+      box-shadow: 0 5px 20px rgba(224, 30, 132, 0.6); display: none;
+    }
+
+    .cart-list { text-align: left; margin-bottom: 15px; }
+    .cart-item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; }
+    .cart-item-qty { display: flex; gap: 6px; align-items: center; }
+    .qty-btn { background: rgba(255,255,255,0.2); border: none; color: #fff; width: 22px; height: 22px; border-radius: 50%; font-weight: bold; cursor: pointer; }
+
+    .cart-input, .cart-select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.7); color: #fff; font-size: 12px; outline: none; }
+    .cart-select option { background: #140e1c; color: #fff; }
+
+    .tips-box { text-align: left; margin-bottom: 15px; }
+    .tips-title { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .tips-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .tip-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 6px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+    .tip-btn.active { background: var(--accent-gold); border-color: var(--accent-gold); font-weight: bold; }
+
+    .summary-box { text-align: left; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; font-size: 12px; margin-bottom: 15px; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; color: var(--text-muted); }
+
+    .send-wa-btn { background: var(--success-green); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+  <!-- ВЫБОР ЯЗЫКА И ВАЛЮТЫ -->
+  <div id="lang-modal">
+    <div class="start-card">
+      <div class="brand-logo">AL'PONTE</div>
+      <div class="brand-tag">RESTAURANT & LOUNGE</div>
+      <p style="font-size: 13px; color: var(--text-muted);">Выберите язык / Select Language</p>
+      <div class="lang-grid">
+        <button class="lang-btn" onclick="setLanguage('ru')">🇷🇺 Русский (₸)</button>
+        <button class="lang-btn" onclick="setLanguage('kk')">🇰🇿 Қазақша (₸)</button>
+        <button class="lang-btn" onclick="setLanguage('en')">🇬🇧 English ($)</button>
+        <button class="lang-btn" onclick="setLanguage('tr')">🇹🇷 Türkçe (₺)</button>
+        <button class="lang-btn" onclick="setLanguage('uz')">🇺🇿 Oʻzbekcha (so'm)</button>
+        <button class="lang-btn" onclick="setLanguage('de')">🇩🇪 Deutsch (€)</button>
+        <button class="lang-btn" onclick="setLanguage('fr')">🇫🇷 Français (€)</button>
+        <button class="lang-btn" onclick="setLanguage('es')">🇪🇸 Español (€)</button>
+        <button class="lang-btn" onclick="setLanguage('zh')">🇨🇳 中文 (¥)</button>
+        <button class="lang-btn" onclick="setLanguage('ko')">🇰🇷 한국어 (₩)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPSELL МОДАЛКА -->
+  <div id="upsell-modal">
+    <div class="start-card" style="border-color: var(--accent-gold);">
+      <h3 style="color: var(--accent-gold); margin-bottom: 8px;" id="upsell-title">🥤 Отличный выбор!</h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;" id="upsell-desc">Желаете добавить освежающий напиток к вашему блюду?</p>
+      
+      <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+        <div style="text-align: left;">
+          <div style="font-weight: bold; font-size: 13px;" id="upsell-item-name">Фирменный Лимонад</div>
+          <div style="color: var(--accent-color); font-size: 12px;" id="upsell-item-price">1 800 ₸</div>
+        </div>
+        <button class="add-cart-btn" id="upsell-add-btn" onclick="addUpsellItem()">Добавить</button>
+      </div>
+
+      <button style="background: transparent; border: none; color: var(--text-muted); font-size: 12px; cursor: pointer;" onclick="closeUpsell()" id="upsell-cancel-btn">Нет, спасибо</button>
+    </div>
+  </div>
+
+  <!-- КОРЗИНА -->
+  <div id="cart-modal">
+    <div class="start-card">
+      <h3 style="margin-bottom: 15px;" id="cart-title">Ваш заказ</h3>
+      
+      <div class="discount-progress-box">
+        <div style="font-size: 11px; color: var(--text-muted);" id="progress-text">...</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar"></div></div>
+      </div>
+
+      <div class="cart-list" id="cart-items-container"></div>
+      
+      <select id="branch-select" class="cart-select">
+        <option value="" disabled selected id="opt-branch-placeholder">Выберите филиал...</option>
+        <option value="Ресторан Al'Ponte (ул. Сагадат Нурмагамбетова, 78)">Ресторан Al'Ponte (ул. Сагадат Нурмагамбетова, 78)</option>
+        <option value="Кофейня Al'Ponte (ул. Кожамкулова, 213)">Кофейня Al'Ponte (ул. Кожамкулова, 213)</option>
+        <option value="Olivka Coffee (ул. Байтурсынова, 54)">Olivka Coffee (ул. Байтурсынова, 54)</option>
+      </select>
+
+      <input type="text" id="cust-name" class="cart-input" placeholder="Ваше имя">
+      <input type="text" id="cust-table" class="cart-input" placeholder="Номер столика или адрес">
+
+      <div class="tips-box">
+        <div class="tips-title" id="lbl-tips">Чаевые официанту:</div>
+        <div class="tips-grid">
+          <button class="tip-btn active" onclick="setTip(0, this)">0%</button>
+          <button class="tip-btn" onclick="setTip(5, this)">5%</button>
+          <button class="tip-btn" onclick="setTip(10, this)">10%</button>
+          <button class="tip-btn" onclick="setTip(15, this)">15%</button>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-row"><span id="lbl-sum-dishes">Блюда:</span><span id="sum-items">0</span></div>
+        <div class="summary-row"><span id="lbl-sum-service">Обслуживание (10%):</span><span id="sum-service">0</span></div>
+        <div class="summary-row" id="row-tips" style="display: none;"><span id="lbl-sum-tips">Чаевые:</span><span id="sum-tips">0</span></div>
+      </div>
+
+      <div style="font-size: 16px; font-weight: bold; margin-bottom: 15px; color: var(--accent-gold);" id="cart-total-text">
+        К оплате: 0
+      </div>
+
+      <button class="send-wa-btn" id="btn-send-wa" onclick="sendOrderToWA()">📱 Отправить в WhatsApp</button>
+      <button style="background: transparent; border: none; color: var(--text-muted); margin-top: 12px; font-size: 12px; cursor: pointer;" onclick="toggleCartModal(false)" id="btn-close-cart">Закрыть</button>
+    </div>
+  </div>
+
+  <!-- ОСНОВНОЕ МЕНЮ -->
+  <div class="menu-page" id="menu-page">
+    
+    <div style="text-align: center; margin-bottom: 15px;">
+      <div class="brand-logo">AL'PONTE</div>
+      <div class="brand-tag">MENU</div>
+    </div>
+
+    <div class="review-banner">
+      <div>
+        <strong id="banner-title">⭐ Понравилось у нас?</strong><br>
+        <span id="banner-text">Будем благодарны за ваш отзыв на 2GIS!</span>
+      </div>
+      <a class="review-banner-btn" id="banner-btn" href="https://2gis.kz/almaty/geo/70000001062270998" target="_blank">Оставить отзыв</a>
+    </div>
+
+    <div class="top-controls">
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-btn-food" onclick="switchTab(this, 'food')">MENU</button>
+        <button class="tab-btn" id="tab-btn-bar" onclick="switchTab(this, 'bar')">BAR</button>
+      </div>
+
+      <button class="change-lang-trigger" onclick="openLangModal()">🌐 Language / Currency</button>
+
+      <div class="search-box">
+        <input type="text" id="menu-search" placeholder="Поиск..." oninput="filterMenu()">
+      </div>
+    </div>
+
+    <div id="tab-food" class="tab-content"><div class="menu-grid" id="food-grid"></div></div>
+    <div id="tab-bar" class="tab-content" style="display: none;"><div class="menu-grid" id="bar-grid"></div></div>
+
+  </div>
+
+  <div class="cart-bar" id="cart-bar" onclick="toggleCartModal(true)">
+    <span id="lbl-cart-bar-title">🛒 Заказ</span>: <span id="cart-btn-qty">0</span> | <span id="cart-btn-total">0</span>
+  </div>
+
+  <script>
+    var currentLang = 'ru';
+
+    var CURRENCIES = {
+      ru: { rate: 1, symbol: '₸', pos: 'after' },
+      kk: { rate: 1, symbol: '₸', pos: 'after' },
+      en: { rate: 0.0021, symbol: '$', pos: 'before' },
+      tr: { rate: 0.072, symbol: '₺', pos: 'after' },
+      uz: { rate: 26.5, symbol: "so'm", pos: 'after' },
+      de: { rate: 0.0019, symbol: '€', pos: 'after' },
+      fr: { rate: 0.0019, symbol: '€', pos: 'after' },
+      es: { rate: 0.0019, symbol: '€', pos: 'after' },
+      zh: { rate: 0.015, symbol: '¥', pos: 'before' },
+      ko: { rate: 2.8, symbol: '₩', pos: 'after' }
+    };
+
+    var UI_TRANSLATIONS = {
+      ru: {
+        search: "Поиск...", bannerTitle: "⭐ Понравилось у нас?", bannerText: "Будем благодарны за ваш отзыв на 2GIS!", bannerBtn: "Оставить отзыв",
+        upsellTitle: "🥤 Отличный выбор!", upsellDesc: "Желаете добавить освежающий напиток к вашему блюду?", upsellAdd: "Добавить", upsellCancel: "Нет, спасибо", upsellName: "Фирменный Лимонад",
+        cartTitle: "Ваш заказ", branchPlaceholder: "Выберите филиал...", namePlaceholder: "Ваше имя", tablePlaceholder: "Номер столика или адрес", tipsLbl: "Чаевые официанту:",
+        sumDishes: "Блюда:", sumService: "Обслуживание (10%):", sumTips: "Чаевые:", toPay: "К оплате:", btnWa: "📱 Отправить в WhatsApp", btnClose: "Закрыть", cartBar: "🛒 Заказ",
+        progGoal: "Закажите еще на {diff} — уберем 10% за обслуживание!", progFree: "🎁 Бесплатное обслуживание у вас за крупный заказ!",
+        serviceFreeLabel: "0 (Скидка 100%)", emptyCart: "Корзина пуста!", selectBranch: "Пожалуйста, выберите филиал!", waHeader: "Здравствуйте! Новый заказ (Al'Ponte):"
+      },
+      kk: {
+        search: "Издеу...", bannerTitle: "⭐ Біздің орын ұнады ма?", bannerText: "2GIS-те пікір қалдырсаңыз қуаныштымыз!", bannerBtn: "Пікір қалдыру",
+        upsellTitle: "🥤 Тамаша таңдау!", upsellDesc: "Тағамыңызға салқындатқыш сусын қосқыңыз келе ме?", upsellAdd: "Қосу", upsellCancel: "Жоқ, рахмет", upsellName: "Фирмалық лимонад",
+        cartTitle: "Сіздің тапсырысыңыз", branchPlaceholder: "Филиалды таңдаңыз...", namePlaceholder: "Сіздің атыңыз", tablePlaceholder: "Үстел нөмірі немесе мекенжай", tipsLbl: "Даяшыға шайпұл:",
+        sumDishes: "Тағамдар:", sumService: "Қызмет көрсету (10%):", sumTips: "Шайпұл:", toPay: "Төлеуге:", btnWa: "📱 WhatsApp-қа жіберу", btnClose: "Жабу", cartBar: "🛒 Тапсырыс",
+        progGoal: "Тағы {diff} тапсырыс беріңіз — 10% қызмет көрсетуді алып тастаймыз!", progFree: "🎁 Үлкен тапсырыс үшін тегін қызмет көрсету!",
+        serviceFreeLabel: "0 (100% жеңілдік)", emptyCart: "Себет бос!", selectBranch: "Филиалды таңдаңыз!", waHeader: "Сәлеметсіз бе! Жаңа тапсырыс (Al'Ponte):"
+      },
+      en: {
+        search: "Search...", bannerTitle: "⭐ Enjoyed your visit?", bannerText: "We would appreciate your review on 2GIS!", bannerBtn: "Leave a review",
+        upsellTitle: "🥤 Great choice!", upsellDesc: "Would you like to add a refreshing drink to your order?", upsellAdd: "Add", upsellCancel: "No, thanks", upsellName: "Signature Lemonade",
+        cartTitle: "Your Order", branchPlaceholder: "Select a branch...", namePlaceholder: "Your name", tablePlaceholder: "Table number or address", tipsLbl: "Tip for waiter:",
+        sumDishes: "Dishes:", sumService: "Service fee (10%):", sumTips: "Tip:", toPay: "Total:", btnWa: "📱 Send via WhatsApp", btnClose: "Close", cartBar: "🛒 Cart",
+        progGoal: "Add {diff} more to get FREE 10% service charge!", progFree: "🎁 FREE service charge unlocked for large order!",
+        serviceFreeLabel: "0 (100% OFF)", emptyCart: "Cart is empty!", selectBranch: "Please select a branch!", waHeader: "Hello! New order (Al'Ponte):"
+      },
+      tr: {
+        search: "Ara...", bannerTitle: "⭐ Bizi beğendiniz mi?", bannerText: "2GIS üzerindeki yorumunuz bizi mutlu eder!", bannerBtn: "Yorum Yap",
+        upsellTitle: "🥤 Harika seçim!", upsellDesc: "Yemeğinizin yanına serinletici bir içecek eklemek ister misiniz?", upsellAdd: "Ekle", upsellCancel: "Hayır, teşekkürler", upsellName: "Özel Limonata",
+        cartTitle: "Siparişiniz", branchPlaceholder: "Şube seçin...", namePlaceholder: "Adınız", tablePlaceholder: "Masa numarası veya adres", tipsLbl: "Garson için bahşiş:",
+        sumDishes: "Yemekler:", sumService: "Servis ücreti (10%):", sumTips: "Bahşiş:", toPay: "Toplam:", btnWa: "📱 WhatsApp ile Gönder", btnClose: "Kapat", cartBar: "🛒 Sepet",
+        progGoal: "%10 servis ücretini kaldırmak için {diff} daha ekleyin!", progFree: "🎁 Büyük sipariş için ücretsiz servis ücreti!",
+        serviceFreeLabel: "0 (%100 İndirim)", emptyCart: "Sepetiniz boş!", selectBranch: "Lütfen bir şube seçin!", waHeader: "Merhaba! Yeni sipariş (Al'Ponte):"
+      },
+      uz: {
+        search: "Qidirish...", bannerTitle: "⭐ Bizning maskan yoqdimi?", bannerText: "2GIS-da sharh qoldirsangiz xursand bo'lamiz!", bannerBtn: "Sharh qoldirish",
+        upsellTitle: "🥤 Ajoyib tanlov!", upsellDesc: "Taomingizga salqin ichimlik qo'shishni xohlaysizmi?", upsellAdd: "Qo'shish", upsellCancel: "Yo'q, rahmat", upsellName: "Фирмавий Лимонад",
+        cartTitle: "Buyurtmangiz", branchPlaceholder: "Filialni tanlang...", namePlaceholder: "Ismingiz", tablePlaceholder: "Stol raqami yoki manzil", tipsLbl: "Ofitsiantga choypuli:",
+        sumDishes: "Taomlar:", sumService: "Xizmat ko'rsatish (10%):", sumTips: "Choypuli:", toPay: "To'lov uchun:", btnWa: "📱 WhatsApp-ga yuborish", btnClose: "Yopish", cartBar: "🛒 Buyurtma",
+        progGoal: "Xizmat xaqini olib tashlash uchun yana {diff} buyurtma qiling!", progFree: "🎁 Katta buyurtma uchun bepul xizmat ko'rsatish!",
+        serviceFreeLabel: "0 (100% Chegirma)", emptyCart: "Savat bo'sh!", selectBranch: "Iltimos, filialni tanlang!", waHeader: "Assalomu alaykum! Yangi buyurtma (Al'Ponte):"
+      },
+      de: {
+        search: "Suchen...", bannerTitle: "⭐ Hat es Ihnen gefallen?", bannerText: "Wir würden uns über Ihre Bewertung auf 2GIS freuen!", bannerBtn: "Bewertung abgeben",
+        upsellTitle: "🥤 Gute Wahl!", upsellDesc: "Möchten Sie ein erfrischendes Getränk zu Ihrem Gericht hinzufügen?", upsellAdd: "Hinzufügen", upsellCancel: "Nein, danke", upsellName: "Hausgemachte Limonade",
+        cartTitle: "Ihre Bestellung", branchPlaceholder: "Filiale auswählen...", namePlaceholder: "Ihr Name", tablePlaceholder: "Tischnummer oder Adresse", tipsLbl: "Trinkgeld:",
+        sumDishes: "Gerichte:", sumService: "Servicegebühr (10%):", sumTips: "Trinkgeld:", toPay: "Gesamtbetrag:", btnWa: "📱 Per WhatsApp senden", btnClose: "Schließen", cartBar: "🛒 Warenkorb",
+        progGoal: "Bestellen Sie für weitere {diff}, um 10% Servicegebühr zu sparen!", progFree: "🎁 Kostenloser Service für Ihre große Bestellung!",
+        serviceFreeLabel: "0 (100% Rabatt)", emptyCart: "Warenkorb ist leer!", selectBranch: "Bitte wählen Sie eine Filiale!", waHeader: "Hallo! Neue Bestellung (Al'Ponte):"
+      },
+      fr: {
+        search: "Rechercher...", bannerTitle: "⭐ Vous avez aimé ?", bannerText: "Nous apprécierions votre avis sur 2GIS !", bannerBtn: "Laisser un avis",
+        upsellTitle: "🥤 Excellent choix !", upsellDesc: "Souhaitez-vous ajouter une boisson rafraîchissante ?", upsellAdd: "Ajouter", upsellCancel: "Non, merci", upsellName: "Limonade de la maison",
+        cartTitle: "Votre Commande", branchPlaceholder: "Sélectionnez une succursale...", namePlaceholder: "Votre nom", tablePlaceholder: "Numéro de table ou adresse", tipsLbl: "Pourboire :",
+        sumDishes: "Plats :", sumService: "Frais de service (10%) :", sumTips: "Pourboire :", toPay: "Total :", btnWa: "📱 Envoyer via WhatsApp", btnClose: "Fermer", cartBar: "🛒 Panier",
+        progGoal: "Ajoutez {diff} de plus pour annuler les 10% de frais de service !", progFree: "🎁 Frais de service OFFERTS pour cette commande !",
+        serviceFreeLabel: "0 (100% Réduction)", emptyCart: "Le panier est vide !", selectBranch: "Veuillez sélectionner une succursale !", waHeader: "Bonjour ! Nouvelle commande (Al'Ponte) :"
+      },
+      es: {
+        search: "Buscar...", bannerTitle: "⭐ ¿Te gustó tu visita?", bannerText: "¡Agradeceríamos tu reseña en 2GIS!", bannerBtn: "Dejar una reseña",
+        upsellTitle: "🥤 ¡Excelente elección!", upsellDesc: "¿Deseas agregar una bebida refrescante a tu pedido?", upsellAdd: "Agregar", upsellCancel: "No, gracias", upsellName: "Limonada de la casa",
+        cartTitle: "Tu Pedido", branchPlaceholder: "Selecciona una sucursal...", namePlaceholder: "Tu nombre", tablePlaceholder: "Número de mesa o dirección", tipsLbl: "Propina:",
+        sumDishes: "Platos:", sumService: "Cargo por servicio (10%):", sumTips: "Propina:", toPay: "Total:", btnWa: "📱 Enviar por WhatsApp", btnClose: "Cerrar", cartBar: "🛒 Carrito",
+        progGoal: "¡Agrega {diff} más para eliminar el 10% de cargo por servicio!", progFree: "🎁 ¡Cargo por servicio GRATIS por pedido grande!",
+        serviceFreeLabel: "0 (100% Descuento)", emptyCart: "¡El carrito está vacío!", selectBranch: "¡Por favor selecciona una sucursal!", waHeader: "¡Hola! Nuevo pedido (Al'Ponte):"
+      },
+      zh: {
+        search: "搜索...", bannerTitle: "⭐ 喜欢我们的餐厅吗？", bannerText: "欢迎在 2GIS 上留下您的宝贵评价！", bannerBtn: "留下评价",
+        upsellTitle: "🥤 绝佳的选择！", upsellDesc: "您想在菜品中加入一杯清凉饮品吗？", upsellAdd: "添加", upsellCancel: "不用了，谢谢", upsellName: "招牌柠檬水",
+        cartTitle: "您的订单", branchPlaceholder: "请选择分店...", namePlaceholder: "您的姓名", tablePlaceholder: "桌号或地址", tipsLbl: "给服务员的小费：",
+        sumDishes: "菜品：", sumService: "服务费 (10%)：", sumTips: "小费：", toPay: "应付总额：", btnWa: "📱 通过 WhatsApp 发送", btnClose: "关闭", cartBar: "🛒 购物车",
+        progGoal: "再消费 {diff} 即可免除 10% 服务费！", progFree: "🎁 大额订单尊享免服务费优惠！",
+        serviceFreeLabel: "0 (全额减免)", emptyCart: "购物车是空的！", selectBranch: "请选择一家分店！", waHeader: "您好！新订单 (Al'Ponte)："
+      },
+      ko: {
+        search: "검색...", bannerTitle: "⭐ 방문이 만족스러우셨나요?", bannerText: "2GIS에 리뷰를 남겨주시면 큰 힘이 됩니다!", bannerBtn: "리뷰 남기기",
+        upsellTitle: "🥤 탁월한 선택입니다!", upsellDesc: "시원한 음료를 함께 추가하시겠습니까?", upsellAdd: "추가하기", upsellCancel: "괜찮습니다", upsellName: "시그니처 레모네이드",
+        cartTitle: "주문 내역", branchPlaceholder: "지점을 선택하세요...", namePlaceholder: "성함", tablePlaceholder: "테이블 번호 또는 주소", tipsLbl: "팁 (팁 금액):",
+        sumDishes: "메뉴 금액:", sumService: "봉사료 (10%):", sumTips: "팁:", toPay: "최종 결제 금액:", btnWa: "📱 WhatsApp으로 전송", btnClose: "닫기", cartBar: "🛒 장바구니",
+        progGoal: "{diff} 추가 주문 시 10% 봉사료 무료!", progFree: "🎁 대형 주문 무료 봉사료 혜택 적용!",
+        serviceFreeLabel: "0 (100% 할인)", emptyCart: "장바구니가 비어 있습니다!", selectBranch: "지점을 선택해 주세요!", waHeader: "안녕하세요! 새로운 주문입니다 (Al'Ponte):"
+      }
+    };
+
+    var FULL_MENU_DATA = {
+      food: [
+        {
+          titles: { ru: "Завтраки", kk: "Таңғы астар", en: "Breakfast", tr: "Kahvaltılar", uz: "Nonushtalar", de: "Frühstück", fr: "Petit-déjeuner", es: "Desayunos", zh: "早餐", ko: "조식" },
+          items: [
+            { ru: "Каша", en: "Porridge", price: 1200 },
+            { ru: "Глазунья", en: "Fried eggs", price: 1200 },
+            { ru: "Омлет / Скрэмбл", en: "Omelette / Scramble", price: 1200 },
+            { ru: "Омлет с сыром", en: "Cheese Omelette", price: 1500 },
+            { ru: "Шакшука", en: "Shakshuka", price: 2200 },
+            { ru: "Английский завтрак", en: "English Breakfast", price: 2500 },
+            { ru: "Казахский завтрак", en: "Kazakh Breakfast", price: 3100 },
+            { ru: "Скрэмбл с лососем и авокадо", en: "Salmon & Avocado Scramble", price: 3300 },
+            { ru: "Брускетта с лососем и яйцом пашот", en: "Salmon & Poached Egg Bruschetta", price: 3500 },
+            { ru: "Блины с курицей и грибами (2шт)", en: "Chicken & Mushroom Pancakes (2pcs)", price: 2400 },
+            { ru: "Гречка с курицей и яйцом пашот", en: "Buckwheat with Chicken & Poached Egg", price: 3500 },
+            { ru: "Творог со сметаной", en: "Cottage Cheese with Sour Cream", price: 1200 },
+            { ru: "Творог с йогуртом и голубикой", en: "Cottage Cheese with Yogurt & Blueberries", price: 1900 },
+            { ru: "Блинчики с творогом", en: "Cottage Cheese Pancakes", price: 2100 },
+            { ru: "Сырники со сметаной (3шт)", en: "Syrniki with Sour Cream (3pcs)", price: 2100 }
+          ]
+        },
+        {
+          titles: { ru: "Салаты и Супы", kk: "Салаттар мен Сорпалар", en: "Salads & Soups", tr: "Salatalar ve Çorbalar", uz: "Salatlar va Sho'rvalar", de: "Salate & Suppen", fr: "Salades & Soupes", es: "Ensaladas y Sopas", zh: "沙拉和汤", ko: "샐러드 및 수프" },
+          items: [
+            { ru: "Салат свежий", en: "Fresh Salad", price: 2800 },
+            { ru: "Салат капрезе", en: "Caprese Salad", price: 2900 },
+            { ru: "Салат греческий", en: "Greek Salad", price: 2900 },
+            { ru: "Цезарь с курицей", en: "Chicken Caesar Salad", price: 3200 },
+            { ru: "Цезарь с креветками", en: "Shrimp Caesar Salad", price: 3300 },
+            { ru: "Салат с жареным баклажаном", en: "Crispy Eggplant Salad", price: 3300 },
+            { ru: "Салат тропик", en: "Tropic Salad", price: 3400 },
+            { ru: "Салат с бураттой и томатами", en: "Burrata & Tomato Salad", price: 3300 },
+            { ru: "Теплый салат с телятиной", en: "Warm Veal Salad", price: 3400 },
+            { ru: "Лапша по-домашнему", en: "Homemade Noodle Soup", price: 1800 },
+            { ru: "Чечевичный крем-суп", en: "Lentil Cream Soup", price: 1900 },
+            { ru: "Окрошка мясная", en: "Meat Okroshka", price: 1900 },
+            { ru: "Борщ", en: "Borscht", price: 1900 },
+            { ru: "Пельмени с/без бульона", en: "Pelmeni Dumplings", price: 2300 },
+            { ru: "Рамен курица / говядина", en: "Ramen (Chicken / Beef)", price: 2500 },
+            { ru: "Солянка", en: "Solyanka Soup", price: 3100 },
+            { ru: "Том ям", en: "Tom Yum Soup", price: 3800 }
+          ]
+        },
+        {
+          titles: { ru: "Горячие Блюда", kk: "Ыстық тағамдар", en: "Main Dishes", tr: "Ana Yemekler", uz: "Issiq taomlar", de: "Hauptgerichte", fr: "Plats Principaux", es: "Platos Principales", zh: "主菜", ko: "메인 요리" },
+          items: [
+            { ru: "Лагман цомян / гуйру", en: "Lagman (Tsomyan / Guiru)", price: 3600 },
+            { ru: "Котлеты из говядины с пюре", en: "Beef Cutlets with Mashed Potatoes", price: 4800 },
+            { ru: "Бефстроганов с рисом", en: "Beef Stroganoff with Rice", price: 5200 },
+            { ru: "Казан-кебаб", en: "Kazan Kebab", price: 5100 },
+            { ru: "Жульен в горшочке", en: "Mushroom Julienne", price: 4500 },
+            { ru: "Жареный картофель с мясом", en: "Fried Potatoes with Meat", price: 4500 },
+            { ru: "Бешбармак", en: "Beshbarmak", price: 5200 },
+            { ru: "Стейк рибай / ти-бон", en: "Ribeye / T-Bone Steak", price: 7500 },
+            { ru: "Паста карбонара", en: "Pasta Carbonara", price: 4500 },
+            { ru: "Паста альфредо", en: "Pasta Alfredo", price: 4700 },
+            { ru: "Паста с морепродуктами", en: "Seafood Pasta", price: 4800 }
+          ]
+        },
+        {
+          titles: { ru: "Фаст Фуд", kk: "Фаст Фуд", en: "Fast Food", tr: "Fast Food", uz: "Fast-fud", de: "Fast Food", fr: "Fast-food", es: "Comida Rápida", zh: "快餐", ko: "패스트푸드" },
+          items: [
+            { ru: "Бургер с курицей и фри", en: "Chicken Burger & Fries", price: 2900 },
+            { ru: "Бургер с говядиной и фри", en: "Beef Burger & Fries", price: 3100 },
+            { ru: "Клаб сендвич с курицей", en: "Chicken Club Sandwich", price: 2800 },
+            { ru: "Клаб сендвич с лососем", en: "Salmon Club Sandwich", price: 2900 },
+            { ru: "Пицца маргарита", en: "Margherita Pizza", price: 2800 },
+            { ru: "Пицца пепперони", en: "Pepperoni Pizza", price: 3100 },
+            { ru: "Пицца четыре сыра", en: "Four Cheese Pizza", price: 3500 }
+          ]
+        }
+      ],
+      bar: [
+        {
+          titles: { ru: "Лимонады & Коктейли", kk: "Лимонадтар мен Коктейльдер", en: "Lemonades & Cocktails", tr: "Limonatalar ve Kokteyller", uz: "Limonadlar va Kokteyllar", de: "Limonaden & Cocktails", fr: "Limonades & Cocktails", es: "Limonadas y Cócteles", zh: "柠檬水和鸡尾酒", ko: "레모네이드 및 칵테일" },
+          items: [
+            { ru: "Лимонад Манго-маракуйя", en: "Mango Passion Lemonade", price: 2100 },
+            { ru: "Лимонад Мохито", en: "Mojito Lemonade", price: 2100 },
+            { ru: "Лимонад Ягодный", en: "Berry Lemonade", price: 2100 },
+            { ru: "Mojito (alcohol)", en: "Mojito (Alcoholic)", price: 2700 },
+            { ru: "Aperol Spritz", en: "Aperol Spritz", price: 3100 }
+          ]
+        },
+        {
+          titles: { ru: "Кофе & Чай", kk: "Кофе мен Шай", en: "Coffee & Tea", tr: "Kahve ve Çay", uz: "Kofe va Choy", de: "Kaffee & Tee", fr: "Café & Thé", es: "Café y Té", zh: "咖啡和茶", ko: "커피 및 차" },
+          items: [
+            { ru: "Espresso", en: "Espresso", price: 1000 },
+            { ru: "Americano", en: "Americano", price: 1000 },
+            { ru: "Cappuccino", en: "Cappuccino", price: 1500 },
+            { ru: "Latte", en: "Latte", price: 1500 },
+            { ru: "Раф", en: "Raf Coffee", price: 1600 },
+            { ru: "Ташкентский чай", en: "Tashkent Tea", price: 2100 },
+            { ru: "Марокканский чай", en: "Moroccan Tea", price: 2100 },
+            { ru: "Ягодный чай", en: "Berry Tea", price: 2100 }
+          ]
+        }
+      ]
+    };
+
+    var cart = {};
+    var FREE_SERVICE_THRESHOLD = 15000;
+    var currentTipPercent = 0;
+
+    function formatCurrency(amountKzt) {
+      var conf = CURRENCIES[currentLang] || CURRENCIES.ru;
+      var converted = amountKzt * conf.rate;
+      
+      var formatted = (conf.rate === 1) 
+        ? Math.round(converted).toLocaleString()
+        : converted.toFixed(2);
+
+      return conf.pos === 'before' ? (conf.symbol + ' ' + formatted) : (formatted + ' ' + conf.symbol);
+    }
+
+    function openLangModal() {
+      document.getElementById('lang-modal').style.display = 'flex';
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('lang-modal').style.display = 'none';
+      document.getElementById('menu-page').style.display = 'block';
+
+      applyTranslations();
+      buildMenuGrid('food-grid', FULL_MENU_DATA.food, true);
+      buildMenuGrid('bar-grid', FULL_MENU_DATA.bar, false);
+      renderCart();
+    }
+
+    function applyTranslations() {
+      var t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ru;
+
+      document.getElementById('menu-search').placeholder = t.search;
+      document.getElementById('banner-title').innerText = t.bannerTitle;
+      document.getElementById('banner-text').innerText = t.bannerText;
+      document.getElementById('banner-btn').innerText = t.bannerBtn;
+
+      document.getElementById('upsell-title').innerText = t.upsellTitle;
+      document.getElementById('upsell-desc').innerText = t.upsellDesc;
+      document.getElementById('upsell-add-btn').innerText = t.upsellAdd;
+      document.getElementById('upsell-cancel-btn').innerText = t.upsellCancel;
+      document.getElementById('upsell-item-name').innerText = t.upsellName;
+      document.getElementById('upsell-item-price').innerText = formatCurrency(1800);
+
+      document.getElementById('cart-title').innerText = t.cartTitle;
+      document.getElementById('opt-branch-placeholder').innerText = t.branchPlaceholder;
+      document.getElementById('cust-name').placeholder = t.namePlaceholder;
+      document.getElementById('cust-table').placeholder = t.tablePlaceholder;
+      document.getElementById('lbl-tips').innerText = t.tipsLbl;
+      document.getElementById('lbl-sum-dishes').innerText = t.sumDishes;
+      document.getElementById('lbl-sum-service').innerText = t.sumService;
+      document.getElementById('lbl-sum-tips').innerText = t.sumTips;
+      document.getElementById('btn-send-wa').innerText = t.btnWa;
+      document.getElementById('btn-close-cart').innerText = t.btnClose;
+      document.getElementById('lbl-cart-bar-title').innerText = t.cartBar;
+    }
+
+    function buildMenuGrid(containerId, categories, isFoodTab) {
+      var container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      categories.forEach(function(cat) {
+        var catDiv = document.createElement('div');
+        catDiv.className = 'category';
+        
+        var catTitle = document.createElement('h3');
+        catTitle.className = 'category-title';
+        catTitle.innerText = cat.titles[currentLang] || cat.titles.ru || cat.titles.en;
+        catDiv.appendChild(catTitle);
+
+        cat.items.forEach(function(item) {
+          var displayName = (currentLang === 'ru' || currentLang === 'kk') ? item.ru : (item.en || item.ru);
+          var itemDiv = document.createElement('div');
+          itemDiv.className = 'menu-item';
+          itemDiv.innerHTML = 
+            '<div class="item-names"><span class="name-main">' + displayName + '</span></div>' +
+            '<span class="item-price">' + formatCurrency(item.price) + '</span>' +
+            '<button class="add-cart-btn" onclick="addToCart(\'' + displayName.replace(/'/g, "\\'") + '\', ' + item.price + ', ' + isFoodTab + ')">+</button>';
+          catDiv.appendChild(itemDiv);
+        });
+
+        container.appendChild(catDiv);
+      });
+    }
+
+    function addToCart(name, price, isFood) {
+      if (!cart[name]) {
+        cart[name] = { price: price, qty: 1 };
+      } else {
+        cart[name].qty += 1;
+      }
+      renderCart();
+
+      if (isFood) {
+        document.getElementById('upsell-modal').style.display = 'flex';
+      }
+    }
+
+    function addUpsellItem() {
+      var t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ru;
+      addToCart(t.upsellName, 1800, false);
+      closeUpsell();
+    }
+
+    function closeUpsell() {
+      document.getElementById('upsell-modal').style.display = 'none';
+    }
+
+    function changeQty(name, delta) {
+      if (cart[name]) {
+        cart[name].qty += delta;
+        if (cart[name].qty <= 0) delete cart[name];
+      }
+      renderCart();
+    }
+
+    function setTip(percent, btn) {
+      currentTipPercent = percent;
+      var tipBtns = document.querySelectorAll('.tip-btn');
+      for(var i = 0; i < tipBtns.length; i++) tipBtns[i].classList.remove('active');
+      btn.classList.add('active');
+      renderCart();
+    }
+
+    function renderCart() {
+      var container = document.getElementById('cart-items-container');
+      container.innerHTML = '';
+      var rawTotal = 0;
+      var totalQty = 0;
+      var t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ru;
+
+      for (var name in cart) {
+        var item = cart[name];
+        var sum = item.price * item.qty;
+        rawTotal += sum;
+        totalQty += item.qty;
+
+        var row = document.createElement('div');
+        row.className = 'cart-item-row';
+        row.innerHTML = '<span>' + name + ' (' + formatCurrency(item.price) + ')</span>' +
+          '<div class="cart-item-qty">' +
+            '<button class="qty-btn" onclick="changeQty(\'' + name.replace(/'/g, "\\'") + '\', -1)">-</button>' +
+            '<span>' + item.qty + '</span>' +
+            '<button class="qty-btn" onclick="changeQty(\'' + name.replace(/'/g, "\\'") + '\', 1)">+</button>' +
+          '</div>';
+        container.appendChild(row);
+      }
+
+      var isServiceFree = rawTotal >= FREE_SERVICE_THRESHOLD;
+      var serviceAmount = isServiceFree ? 0 : rawTotal * 0.10;
+      var tipAmount = rawTotal * (currentTipPercent / 100);
+      var finalTotal = rawTotal + serviceAmount + tipAmount;
+
+      var percent = Math.min((rawTotal / FREE_SERVICE_THRESHOLD) * 100, 100);
+      document.getElementById('progress-bar').style.width = percent + '%';
+      
+      var pText = document.getElementById('progress-text');
+      if (isServiceFree) {
+        pText.innerText = t.progFree;
+        pText.style.color = "var(--success-green)";
+      } else {
+        var diff = FREE_SERVICE_THRESHOLD - rawTotal;
+        pText.innerText = t.progGoal.replace('{diff}', formatCurrency(diff));
+        pText.style.color = "var(--text-muted)";
+      }
+
+      document.getElementById('sum-items').innerText = formatCurrency(rawTotal);
+      document.getElementById('sum-service').innerText = isServiceFree ? t.serviceFreeLabel : formatCurrency(serviceAmount);
+      
+      var tipsRow = document.getElementById('row-tips');
+      if (currentTipPercent > 0) {
+        tipsRow.style.display = 'flex';
+        document.getElementById('sum-tips').innerText = formatCurrency(tipAmount) + ' (' + currentTipPercent + '%)';
+      } else {
+        tipsRow.style.display = 'none';
+      }
+
+      var cartBar = document.getElementById('cart-bar');
+      if (totalQty > 0) {
+        cartBar.style.display = 'block';
+        document.getElementById('cart-btn-qty').innerText = totalQty;
+        document.getElementById('cart-btn-total').innerText = formatCurrency(finalTotal);
+        document.getElementById('cart-total-text').innerText = t.toPay + ' ' + formatCurrency(finalTotal);
+      } else {
+        cartBar.style.display = 'none';
+        toggleCartModal(false);
+      }
+    }
+
+    function toggleCartModal(show) {
+      document.getElementById('cart-modal').style.display = show ? 'flex' : 'none';
+    }
+
+    function sendOrderToWA() {
+      var t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ru;
+      var branch = document.getElementById('branch-select').value;
+      var name = document.getElementById('cust-name').value.trim() || 'Guest';
+      var table = document.getElementById('cust-table').value.trim() || 'N/A';
+      
+      if (Object.keys(cart).length === 0) {
+        alert(t.emptyCart);
+        return;
+      }
+
+      if (!branch) {
+        alert(t.selectBranch);
+        return;
+      }
+
+      var rawTotal = 0;
+      var text = t.waHeader + "\n";
+      text += "📍 Branch: " + branch + "\n";
+      text += "👤 Name: " + name + "\n";
+      text += "🪑 Table/Address: " + table + "\n\n";
+      text += "Order:\n";
+
+      for (var item in cart) {
+        var sum = cart[item].price * cart[item].qty;
+        rawTotal += sum;
+        text += "• " + item + " x" + cart[item].qty + " — " + formatCurrency(sum) + "\n";
+      }
+
+      var isServiceFree = rawTotal >= FREE_SERVICE_THRESHOLD;
+      var serviceAmount = isServiceFree ? 0 : rawTotal * 0.10;
+      var tipAmount = rawTotal * (currentTipPercent / 100);
+      var finalTotal = rawTotal + serviceAmount + tipAmount;
+
+      text += "\n" + t.sumDishes + " " + formatCurrency(rawTotal);
+      text += "\n" + t.sumService + " " + (isServiceFree ? t.serviceFreeLabel : formatCurrency(serviceAmount));
+      if (currentTipPercent > 0) {
+        text += "\n" + t.sumTips + " (" + currentTipPercent + "%): " + formatCurrency(tipAmount);
+      }
+      text += "\n\n💰 " + t.toPay + " " + formatCurrency(finalTotal);
+
+      var phone = "77018929830";
+      var waUrl = "https://api.whatsapp.com/send?phone=" + phone + "&text=" + encodeURIComponent(text);
+      window.location.href = waUrl;
+    }
+
+    function switchTab(btn, tabName) {
+      var tabBtns = document.querySelectorAll('.tab-btn');
+      for (var i = 0; i < tabBtns.length; i++) tabBtns[i].classList.remove('active');
+      btn.classList.add('active');
+      document.getElementById('tab-food').style.display = tabName === 'food' ? 'block' : 'none';
+      document.getElementById('tab-bar').style.display = tabName === 'bar' ? 'block' : 'none';
+    }
+
+    function filterMenu() {
+      var query = document.getElementById('menu-search').value.toLowerCase();
+      var menuItems = document.querySelectorAll('.menu-item');
+      for (var i = 0; i < menuItems.length; i++) {
+        var text = menuItems[i].innerText.toLowerCase();
+        menuItems[i].style.display = text.indexOf(query) !== -1 ? 'flex' : 'none';
+      }
+    }
+  </script>
+</body>
+</html>
