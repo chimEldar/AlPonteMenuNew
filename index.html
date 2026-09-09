@@ -45,11 +45,36 @@
     .start-card {
       position: relative; z-index: 2;
       background: var(--card-bg);
-      padding: 25px 20px; border-radius: 24px;
+      padding: 0 20px 25px; border-radius: 24px;
       text-align: center; max-width: 480px; width: 100%;
       border: 1px solid rgba(224, 30, 132, 0.5);
       max-height: 90vh; overflow-y: auto;
     }
+
+    .start-visual {
+      min-height: 190px; margin: 0 -20px 24px; padding: 24px 20px;
+      display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+      text-align: left; border-radius: 24px 24px 0 0; overflow: hidden;
+      background: linear-gradient(180deg, rgba(13, 10, 18, 0.05), rgba(13, 10, 18, 0.9)),
+        url('image/WhatsApp%20Image%202026-09-08%20at%2016.43.39%20%281%29.jpeg') center/cover;
+      border-bottom: 1px solid rgba(242, 101, 34, 0.45);
+    }
+
+    .start-layout { display: block; }
+      .locations-panel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 22px; }
+      .location-card { padding: 16px; text-align: left; background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025)); border: 1px solid rgba(242, 101, 34, 0.28); border-radius: 14px; }
+      .location-card strong { display: block; margin-bottom: 7px; color: #fff; font-size: 14px; }
+      .location-card span { display: block; color: var(--text-muted); font-size: 11px; line-height: 1.45; }
+      .location-card em { display: block; margin-top: 9px; color: #f5bd88; font-size: 10px; font-style: normal; letter-spacing: 0.5px; }
+      .start-locations { display: grid; gap: 7px; margin: 0 auto 20px; max-width: 520px; text-align: left; }
+      .start-location { padding: 9px 11px; border-left: 2px solid var(--accent-gold); background: rgba(255,255,255,0.045); color: var(--text-muted); font-size: 11px; }
+      .start-location strong { color: #fff; }
+
+    .start-kicker { color: #ffd2a8; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .start-heading { max-width: 330px; margin-top: 7px; color: #fff; font-family: Georgia, 'Times New Roman', serif; font-size: 30px; line-height: 1.05; }
+    .start-intro { margin: 0 auto 18px; max-width: 340px; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+    .start-meta { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 0 auto 20px; }
+    .start-meta span { padding: 7px 10px; color: #f4d7c0; background: rgba(242, 101, 34, 0.1); border: 1px solid rgba(242, 101, 34, 0.25); border-radius: 999px; font-size: 10px; }
 
     .brand-logo { font-size: 32px; font-weight: 900; letter-spacing: 4px; color: #fff; text-shadow: 0 0 15px var(--accent-color); }
     .brand-tag { font-size: 11px; color: var(--accent-gold); letter-spacing: 3px; margin-bottom: 18px; }
@@ -81,6 +106,10 @@
       background: var(--accent-gold); color: #fff; border: none; padding: 8px 14px;
       border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block;
     }
+    .review-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+    .review-links .review-banner-btn:nth-child(2) { background: #4285f4; }
+    .review-links .review-banner-btn:nth-child(3) { background: #f5c400; color: #161616; }
+    .review-links .whatsapp-help-btn { background: var(--success-green); }
 
     .discount-progress-box {
       background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: left;
@@ -100,12 +129,30 @@
 
     .search-box { flex-grow: 1; max-width: 260px; }
     .search-box input { width: 100%; padding: 9px 16px; border-radius: 20px; border: 1px solid rgba(224, 30, 132, 0.4); background: rgba(0,0,0,0.5); color: #fff; font-size: 13px; outline: none; }
+    .category-nav { display: flex; gap: 8px; overflow-x: auto; padding: 0 2px 14px; margin-bottom: 2px; scrollbar-width: thin; }
+    .category-nav:empty { display: none; }
+    .category-nav-btn { flex: 0 0 auto; padding: 8px 13px; color: var(--text-muted); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; cursor: pointer; font-size: 11px; transition: color 0.2s, background 0.2s, border-color 0.2s; }
+    .category-nav-btn:hover, .category-nav-btn.active { color: #fff; background: rgba(224, 30, 132, 0.25); border-color: rgba(224, 30, 132, 0.7); }
 
     .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .category { background: rgba(0, 0, 0, 0.3); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+    .category { position: relative; overflow: hidden; background: rgba(0, 0, 0, 0.3); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); border-top: 3px solid var(--accent-gold); }
+    .category::before { content: ""; position: absolute; top: 0; left: 18px; right: 18px; height: 1px; background: rgba(255,255,255,0.14); }
     .category-title { font-size: 15px; text-align: center; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; color: var(--accent-gold); }
+    .food-category:nth-child(2) { border-top-color: #d65a91; }
+    .food-category:nth-child(2) .category-title { color: #f08cb6; }
+    .food-category:nth-child(3) { border-top-color: #e7b85c; }
+    .food-category:nth-child(3) .category-title { color: #f5ce78; }
+    .food-category:nth-child(4) { border-top-color: #c86b42; }
+    .food-category:nth-child(4) .category-title { color: #ed9b70; }
+    .bar-category { border-top-color: #3ba89c; }
+    .bar-category .category-title { color: #72d3c7; }
+    .bar-category:nth-child(2) { border-top-color: #6d9bd8; }
+    .bar-category:nth-child(2) .category-title { color: #9ec3f4; }
+    .featured-category { background: linear-gradient(145deg, rgba(242, 101, 34, 0.18), rgba(224, 30, 132, 0.08) 55%, rgba(0,0,0,0.3)); border-color: rgba(242, 101, 34, 0.42); border-top-color: var(--accent-gold); }
+    .featured-category .category-title { grid-column: 1 / -1; }
 
-    .menu-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    .menu-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 4px 6px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); transition: background 0.2s, transform 0.2s; }
+    .menu-item:hover { background: rgba(255,255,255,0.05); transform: translateX(3px); }
     .item-names { flex-grow: 1; }
     .name-main { font-weight: 600; color: #fff; font-size: 13px; }
     .item-price { font-weight: bold; color: var(--accent-color); font-size: 13px; white-space: nowrap; margin-right: 6px; }
@@ -137,6 +184,59 @@
     .summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; color: var(--text-muted); }
 
     .send-wa-btn { background: var(--success-green); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px; }
+
+    @media (min-width: 900px) {
+      body { padding: 48px 40px 110px; background: #09070d; }
+      body::before { background: radial-gradient(circle at 50% -10%, rgba(91, 19, 67, 0.7), rgba(9, 7, 13, 0.97) 62%); }
+
+      .menu-page { max-width: 1280px; padding: 40px; border-radius: 28px; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45); }
+      .menu-page > div:first-child { margin-bottom: 24px !important; }
+      .menu-page .brand-logo { font-size: 42px; }
+      .menu-page .brand-tag { font-size: 12px; }
+
+      .review-banner { padding: 18px 22px; font-size: 13px; box-shadow: inset 0 1px rgba(255,255,255,0.06); }
+      .locations-panel { gap: 18px; }
+      .review-banner-btn { padding: 10px 16px; font-size: 12px; }
+
+      .top-controls { flex-wrap: nowrap; gap: 18px; margin-bottom: 28px; }
+      .tabs { flex-shrink: 0; }
+      .tab-btn { padding: 10px 20px; }
+      .change-lang-trigger { flex-shrink: 0; }
+      .search-box { max-width: 360px; margin-left: auto; }
+      .category-nav { padding-bottom: 18px; margin-bottom: 6px; }
+      .category-nav-btn { padding: 9px 16px; font-size: 12px; }
+
+      .menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+      .category { padding: 24px; background: rgba(10, 8, 15, 0.58); border-color: rgba(255,255,255,0.09); box-shadow: 0 12px 30px rgba(0,0,0,0.16); }
+      .featured-category { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 16px; }
+      .category-title { font-size: 16px; margin-bottom: 20px; }
+      .name-main, .item-price { font-size: 14px; }
+      .menu-item { min-height: 42px; }
+
+      #lang-modal { padding: 40px; }
+      #lang-modal .start-card { max-width: 1120px; padding: 0; overflow: hidden; }
+      #lang-modal .start-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(420px, 0.9fr); min-height: 620px; }
+      #lang-modal .start-visual { min-height: 620px; height: 100%; margin: 0; padding: 48px; border-radius: 0; border-bottom: none; border-right: 1px solid rgba(242, 101, 34, 0.45); }
+      #lang-modal .start-heading { max-width: 520px; font-size: 52px; }
+      #lang-modal .start-panel { display: flex; flex-direction: column; justify-content: center; padding: 44px 48px; }
+      #lang-modal .brand-logo { font-size: 42px; }
+      #lang-modal .start-intro { max-width: 520px; font-size: 14px; }
+      #lang-modal .lang-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      #lang-modal .lang-btn { min-height: 54px; padding: 10px 8px; }
+
+      #cart-modal, #upsell-modal { padding: 40px; }
+      #cart-modal .start-card, #upsell-modal .start-card { max-width: 560px; }
+    }
+
+    @media (min-width: 1200px) {
+      .menu-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .featured-category { grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 700px) {
+      .locations-panel { grid-template-columns: 1fr; }
+      .featured-category { display: block; }
+    }
   </style>
 </head>
 <body>
@@ -144,20 +244,35 @@
   <!-- ВЫБОР ЯЗЫКА И ВАЛЮТЫ -->
   <div id="lang-modal">
     <div class="start-card">
-      <div class="brand-logo">AL'PONTE</div>
-      <div class="brand-tag">RESTAURANT & LOUNGE</div>
-      <p style="font-size: 13px; color: var(--text-muted);">Выберите язык / Select Language</p>
-      <div class="lang-grid">
-        <button class="lang-btn" onclick="setLanguage('ru')">🇷🇺 Русский (₸)</button>
-        <button class="lang-btn" onclick="setLanguage('kk')">🇰🇿 Қазақша (₸)</button>
-        <button class="lang-btn" onclick="setLanguage('en')">🇬🇧 English ($)</button>
-        <button class="lang-btn" onclick="setLanguage('tr')">🇹🇷 Türkçe (₺)</button>
-        <button class="lang-btn" onclick="setLanguage('uz')">🇺🇿 Oʻzbekcha (so'm)</button>
-        <button class="lang-btn" onclick="setLanguage('de')">🇩🇪 Deutsch (€)</button>
-        <button class="lang-btn" onclick="setLanguage('fr')">🇫🇷 Français (€)</button>
-        <button class="lang-btn" onclick="setLanguage('es')">🇪🇸 Español (€)</button>
-        <button class="lang-btn" onclick="setLanguage('zh')">🇨🇳 中文 (¥)</button>
-        <button class="lang-btn" onclick="setLanguage('ko')">🇰🇷 한국어 (₩)</button>
+      <div class="start-layout">
+        <div class="start-visual">
+          <div class="start-kicker">Restaurant & lounge</div>
+          <div class="start-heading">Вечер начинается с хорошего вкуса</div>
+          <div class="start-locations">
+            <div class="start-location"><strong>Ozen Palace</strong> · Кожамкулова, 213</div>
+            <div class="start-location"><strong>Golden Palace</strong> · Olivka Coffee · Байтурсынова, 54</div>
+            <div class="start-location"><strong>East Palace</strong> · Al'Ponte · Сагадат Нурмагамбетова, 78</div>
+          </div>
+        </div>
+        <div class="start-panel">
+          <div class="brand-logo">AL'PONTE</div>
+          <div class="brand-tag">MENU · BAR · MOOD</div>
+          <p class="start-intro">Выберите язык меню и откройте стол с любимыми блюдами, напитками и атмосферой Al'Ponte.</p>
+          <div class="start-meta"><span>Кухня весь день</span><span>Бар и lounge</span><span>Алматы</span></div>
+          <p style="font-size: 13px; color: var(--text-muted);">Выберите язык / Select Language</p>
+          <div class="lang-grid">
+        <button class="lang-btn" onclick="setLanguage('ru')">Русский (₸)</button>
+        <button class="lang-btn" onclick="setLanguage('kk')">Қазақша (₸)</button>
+        <button class="lang-btn" onclick="setLanguage('en')">English ($)</button>
+        <button class="lang-btn" onclick="setLanguage('tr')">Türkçe (₺)</button>
+        <button class="lang-btn" onclick="setLanguage('uz')">Oʻzbekcha (so'm)</button>
+        <button class="lang-btn" onclick="setLanguage('de')">Deutsch (€)</button>
+        <button class="lang-btn" onclick="setLanguage('fr')">Français (€)</button>
+        <button class="lang-btn" onclick="setLanguage('es')">Español (€)</button>
+        <button class="lang-btn" onclick="setLanguage('zh')">中文 (¥)</button>
+        <button class="lang-btn" onclick="setLanguage('ko')">한국어 (₩)</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -165,7 +280,7 @@
   <!-- UPSELL МОДАЛКА -->
   <div id="upsell-modal">
     <div class="start-card" style="border-color: var(--accent-gold);">
-      <h3 style="color: var(--accent-gold); margin-bottom: 8px;" id="upsell-title">🥤 Отличный выбор!</h3>
+      <h3 style="color: var(--accent-gold); margin-bottom: 8px;" id="upsell-title">Отличный выбор!</h3>
       <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;" id="upsell-desc">Желаете добавить освежающий напиток к вашему блюду?</p>
       
       <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
@@ -194,9 +309,9 @@
       
       <select id="branch-select" class="cart-select">
         <option value="" disabled selected id="opt-branch-placeholder">Выберите филиал...</option>
-        <option value="Ресторан Al'Ponte (ул. Сагадат Нурмагамбетова, 78)">Ресторан Al'Ponte (ул. Сагадат Нурмагамбетова, 78)</option>
-        <option value="Кофейня Al'Ponte (ул. Кожамкулова, 213)">Кофейня Al'Ponte (ул. Кожамкулова, 213)</option>
-        <option value="Olivka Coffee (ул. Байтурсынова, 54)">Olivka Coffee (ул. Байтурсынова, 54)</option>
+        <option value="Ozen Palace — Al'Ponte Coffee (ул. Кожамкулова, 213)">Ozen Palace — Al'Ponte (ул. Кожамкулова, 213)</option>
+        <option value="Golden Palace — Olivka Coffee (ул. Байтурсынова, 54)">Golden Palace — Olivka Coffee (ул. Байтурсынова, 54)</option>
+        <option value="East Palace — Al'Ponte (ул. Сагадат Нурмагамбетова, 78)">East Palace — Al'Ponte (ул. Сагадат Нурмагамбетова, 78)</option>
       </select>
 
       <input type="text" id="cust-name" class="cart-input" placeholder="Ваше имя">
@@ -222,7 +337,7 @@
         К оплате: 0
       </div>
 
-      <button class="send-wa-btn" id="btn-send-wa" onclick="sendOrderToWA()">📱 Отправить в WhatsApp</button>
+      <button class="send-wa-btn" id="btn-send-wa" onclick="sendOrderToWA()">Отправить в WhatsApp</button>
       <button style="background: transparent; border: none; color: var(--text-muted); margin-top: 12px; font-size: 12px; cursor: pointer;" onclick="toggleCartModal(false)" id="btn-close-cart">Закрыть</button>
     </div>
   </div>
@@ -235,12 +350,23 @@
       <div class="brand-tag">MENU</div>
     </div>
 
+    <div class="locations-panel" aria-label="Наши локации">
+      <div class="location-card"><strong>Ozen Palace</strong><span>Al'Ponte</span><em>Кожамкулова, 213</em></div>
+      <div class="location-card"><strong>Golden Palace</strong><span>Olivka Coffee</span><em>Байтурсынова, 54</em></div>
+      <div class="location-card"><strong>East Palace</strong><span>Al'Ponte</span><em>Сагадат Нурмагамбетова, 78</em></div>
+    </div>
+
     <div class="review-banner">
       <div>
-        <strong id="banner-title">⭐ Понравилось у нас?</strong><br>
-        <span id="banner-text">Будем благодарны за ваш отзыв на 2GIS!</span>
+        <strong id="banner-title">Понравилось у нас?</strong><br>
+        <span id="banner-text">Будем благодарны за ваш отзыв!</span>
       </div>
-      <a class="review-banner-btn" id="banner-btn" href="https://2gis.kz/almaty/geo/70000001062270998" target="_blank">Оставить отзыв</a>
+        <div class="review-links">
+          <a class="review-banner-btn" id="banner-btn" href="https://2gis.kz/almaty/geo/70000001062270998" target="_blank" rel="noopener noreferrer">2GIS</a>
+          <a class="review-banner-btn" id="google-review-btn" href="https://www.google.com/maps/search/?api=1&query=Al%27Ponte%20Almaty" target="_blank" rel="noopener noreferrer">Google Maps</a>
+          <a class="review-banner-btn" id="yandex-review-btn" href="https://yandex.ru/maps/?text=Al%27Ponte%20Алматы" target="_blank" rel="noopener noreferrer">Яндекс Карты</a>
+          <a class="review-banner-btn whatsapp-help-btn" id="whatsapp-help-btn" href="https://wa.me/77018929830?text=Здравствуйте%2C%20мне%20нужна%20помощь%20по%20меню%20Al%27Ponte" target="_blank" rel="noopener noreferrer">Помощь в WhatsApp</a>
+        </div>
     </div>
 
     <div class="top-controls">
@@ -256,17 +382,31 @@
       </div>
     </div>
 
+    <div class="category-nav" id="category-nav"></div>
+
     <div id="tab-food" class="tab-content"><div class="menu-grid" id="food-grid"></div></div>
     <div id="tab-bar" class="tab-content" style="display: none;"><div class="menu-grid" id="bar-grid"></div></div>
 
   </div>
 
   <div class="cart-bar" id="cart-bar" onclick="toggleCartModal(true)">
-    <span id="lbl-cart-bar-title">🛒 Заказ</span>: <span id="cart-btn-qty">0</span> | <span id="cart-btn-total">0</span>
+    <span id="lbl-cart-bar-title">Заказ</span>: <span id="cart-btn-qty">0</span> | <span id="cart-btn-total">0</span>
   </div>
 
   <script>
     var currentLang = 'ru';
+    var WHATSAPP_HELP = {
+      ru: { label: 'Помощь в WhatsApp', message: 'Здравствуйте, мне нужна помощь по меню Al\'Ponte' },
+      kk: { label: 'WhatsApp көмегі', message: 'Сәлеметсіз бе, маған Al\'Ponte мәзірі бойынша көмек керек' },
+      en: { label: 'WhatsApp Help', message: 'Hello, I need help with the Al\'Ponte menu' },
+      tr: { label: 'WhatsApp Yardım', message: 'Merhaba, Al\'Ponte menüsü hakkında yardıma ihtiyacım var' },
+      uz: { label: 'WhatsApp yordami', message: 'Assalomu alaykum, Al\'Ponte menyusi bo\'yicha yordam kerak' },
+      de: { label: 'WhatsApp-Hilfe', message: 'Hallo, ich brauche Hilfe mit der Al\'Ponte-Speisekarte' },
+      fr: { label: 'Aide WhatsApp', message: 'Bonjour, j\'ai besoin d\'aide avec le menu Al\'Ponte' },
+      es: { label: 'Ayuda por WhatsApp', message: 'Hola, necesito ayuda con el menu de Al\'Ponte' },
+      zh: { label: 'WhatsApp 帮助', message: '您好，我需要 Al\'Ponte 菜单方面的帮助' },
+      ko: { label: 'WhatsApp 도움말', message: '안녕하세요, Al\'Ponte 메뉴에 도움이 필요합니다' }
+    };
 
     var CURRENCIES = {
       ru: { rate: 1, symbol: '₸', pos: 'after' },
@@ -283,157 +423,166 @@
 
     var UI_TRANSLATIONS = {
       ru: {
-        search: "Поиск...", bannerTitle: "⭐ Понравилось у нас?", bannerText: "Будем благодарны за ваш отзыв на 2GIS!", bannerBtn: "Оставить отзыв",
-        upsellTitle: "🥤 Отличный выбор!", upsellDesc: "Желаете добавить освежающий напиток к вашему блюду?", upsellAdd: "Добавить", upsellCancel: "Нет, спасибо", upsellName: "Фирменный Лимонад",
+        search: "Поиск...", bannerTitle: "Понравилось у нас?", bannerText: "Будем благодарны за ваш отзыв!", bannerBtn: "2GIS",
+        upsellTitle: "Отличный выбор!", upsellDesc: "Желаете добавить освежающий напиток к вашему блюду?", upsellAdd: "Добавить", upsellCancel: "Нет, спасибо", upsellName: "Фирменный Лимонад",
         cartTitle: "Ваш заказ", branchPlaceholder: "Выберите филиал...", namePlaceholder: "Ваше имя", tablePlaceholder: "Номер столика или адрес", tipsLbl: "Чаевые официанту:",
-        sumDishes: "Блюда:", sumService: "Обслуживание (10%):", sumTips: "Чаевые:", toPay: "К оплате:", btnWa: "📱 Отправить в WhatsApp", btnClose: "Закрыть", cartBar: "🛒 Заказ",
+        sumDishes: "Блюда:", sumService: "Обслуживание (10%):", sumTips: "Чаевые:", toPay: "К оплате:", btnWa: "Отправить в WhatsApp", btnClose: "Закрыть", cartBar: "Заказ",
         progGoal: "Закажите еще на {diff} — уберем 10% за обслуживание!", progFree: "🎁 Бесплатное обслуживание у вас за крупный заказ!",
-        serviceFreeLabel: "0 (Скидка 100%)", emptyCart: "Корзина пуста!", selectBranch: "Пожалуйста, выберите филиал!", waHeader: "Здравствуйте! Новый заказ (Al'Ponte):"
+        serviceFreeLabel: "0 (Скидка 100%)", emptyCart: "Корзина пуста!", selectBranch: "Пожалуйста, выберите филиал!", waHeader: "Здравствуйте! Новый заказ (Al'Ponte):", waBranch: "Филиал", waName: "Имя", waTable: "Столик/адрес", waOrder: "Заказ"
       },
       kk: {
-        search: "Издеу...", bannerTitle: "⭐ Біздің орын ұнады ма?", bannerText: "2GIS-те пікір қалдырсаңыз қуаныштымыз!", bannerBtn: "Пікір қалдыру",
-        upsellTitle: "🥤 Тамаша таңдау!", upsellDesc: "Тағамыңызға салқындатқыш сусын қосқыңыз келе ме?", upsellAdd: "Қосу", upsellCancel: "Жоқ, рахмет", upsellName: "Фирмалық лимонад",
+        search: "Издеу...", bannerTitle: "Біздің орын ұнады ма?", bannerText: "Пікіріңізге қуанышты боламыз!", bannerBtn: "2GIS",
+        upsellTitle: "Тамаша таңдау!", upsellDesc: "Тағамыңызға салқындатқыш сусын қосқыңыз келе ме?", upsellAdd: "Қосу", upsellCancel: "Жоқ, рахмет", upsellName: "Фирмалық лимонад",
         cartTitle: "Сіздің тапсырысыңыз", branchPlaceholder: "Филиалды таңдаңыз...", namePlaceholder: "Сіздің атыңыз", tablePlaceholder: "Үстел нөмірі немесе мекенжай", tipsLbl: "Даяшыға шайпұл:",
-        sumDishes: "Тағамдар:", sumService: "Қызмет көрсету (10%):", sumTips: "Шайпұл:", toPay: "Төлеуге:", btnWa: "📱 WhatsApp-қа жіберу", btnClose: "Жабу", cartBar: "🛒 Тапсырыс",
+        sumDishes: "Тағамдар:", sumService: "Қызмет көрсету (10%):", sumTips: "Шайпұл:", toPay: "Төлеуге:", btnWa: "WhatsApp-қа жіберу", btnClose: "Жабу", cartBar: "Тапсырыс",
         progGoal: "Тағы {diff} тапсырыс беріңіз — 10% қызмет көрсетуді алып тастаймыз!", progFree: "🎁 Үлкен тапсырыс үшін тегін қызмет көрсету!",
-        serviceFreeLabel: "0 (100% жеңілдік)", emptyCart: "Себет бос!", selectBranch: "Филиалды таңдаңыз!", waHeader: "Сәлеметсіз бе! Жаңа тапсырыс (Al'Ponte):"
+        serviceFreeLabel: "0 (100% жеңілдік)", emptyCart: "Себет бос!", selectBranch: "Филиалды таңдаңыз!", waHeader: "Сәлеметсіз бе! Жаңа тапсырыс (Al'Ponte):", waBranch: "Филиал", waName: "Аты", waTable: "Үстел/мекенжай", waOrder: "Тапсырыс"
       },
       en: {
-        search: "Search...", bannerTitle: "⭐ Enjoyed your visit?", bannerText: "We would appreciate your review on 2GIS!", bannerBtn: "Leave a review",
-        upsellTitle: "🥤 Great choice!", upsellDesc: "Would you like to add a refreshing drink to your order?", upsellAdd: "Add", upsellCancel: "No, thanks", upsellName: "Signature Lemonade",
+        search: "Search...", bannerTitle: "Enjoyed your visit?", bannerText: "We would appreciate your review!", bannerBtn: "2GIS",
+        upsellTitle: "Great choice!", upsellDesc: "Would you like to add a refreshing drink to your order?", upsellAdd: "Add", upsellCancel: "No, thanks", upsellName: "Signature Lemonade",
         cartTitle: "Your Order", branchPlaceholder: "Select a branch...", namePlaceholder: "Your name", tablePlaceholder: "Table number or address", tipsLbl: "Tip for waiter:",
-        sumDishes: "Dishes:", sumService: "Service fee (10%):", sumTips: "Tip:", toPay: "Total:", btnWa: "📱 Send via WhatsApp", btnClose: "Close", cartBar: "🛒 Cart",
+        sumDishes: "Dishes:", sumService: "Service fee (10%):", sumTips: "Tip:", toPay: "Total:", btnWa: "Send via WhatsApp", btnClose: "Close", cartBar: "Cart",
         progGoal: "Add {diff} more to get FREE 10% service charge!", progFree: "🎁 FREE service charge unlocked for large order!",
-        serviceFreeLabel: "0 (100% OFF)", emptyCart: "Cart is empty!", selectBranch: "Please select a branch!", waHeader: "Hello! New order (Al'Ponte):"
+        serviceFreeLabel: "0 (100% OFF)", emptyCart: "Cart is empty!", selectBranch: "Please select a branch!", waHeader: "Hello! New order (Al'Ponte):", waBranch: "Branch", waName: "Name", waTable: "Table/Address", waOrder: "Order"
       },
       tr: {
-        search: "Ara...", bannerTitle: "⭐ Bizi beğendiniz mi?", bannerText: "2GIS üzerindeki yorumunuz bizi mutlu eder!", bannerBtn: "Yorum Yap",
-        upsellTitle: "🥤 Harika seçim!", upsellDesc: "Yemeğinizin yanına serinletici bir içecek eklemek ister misiniz?", upsellAdd: "Ekle", upsellCancel: "Hayır, teşekkürler", upsellName: "Özel Limonata",
+        search: "Ara...", bannerTitle: "Bizi beğendiniz mi?", bannerText: "Yorumunuz bizi mutlu eder!", bannerBtn: "2GIS",
+        upsellTitle: "Harika seçim!", upsellDesc: "Yemeğinizin yanına serinletici bir içecek eklemek ister misiniz?", upsellAdd: "Ekle", upsellCancel: "Hayır, teşekkürler", upsellName: "Özel Limonata",
         cartTitle: "Siparişiniz", branchPlaceholder: "Şube seçin...", namePlaceholder: "Adınız", tablePlaceholder: "Masa numarası veya adres", tipsLbl: "Garson için bahşiş:",
-        sumDishes: "Yemekler:", sumService: "Servis ücreti (10%):", sumTips: "Bahşiş:", toPay: "Toplam:", btnWa: "📱 WhatsApp ile Gönder", btnClose: "Kapat", cartBar: "🛒 Sepet",
+        sumDishes: "Yemekler:", sumService: "Servis ücreti (10%):", sumTips: "Bahşiş:", toPay: "Toplam:", btnWa: "WhatsApp ile Gönder", btnClose: "Kapat", cartBar: "Sepet",
         progGoal: "%10 servis ücretini kaldırmak için {diff} daha ekleyin!", progFree: "🎁 Büyük sipariş için ücretsiz servis ücreti!",
-        serviceFreeLabel: "0 (%100 İndirim)", emptyCart: "Sepetiniz boş!", selectBranch: "Lütfen bir şube seçin!", waHeader: "Merhaba! Yeni sipariş (Al'Ponte):"
+        serviceFreeLabel: "0 (%100 İndirim)", emptyCart: "Sepetiniz boş!", selectBranch: "Lütfen bir şube seçin!", waHeader: "Merhaba! Yeni sipariş (Al'Ponte):", waBranch: "Şube", waName: "Ad", waTable: "Masa/Adres", waOrder: "Sipariş"
       },
       uz: {
-        search: "Qidirish...", bannerTitle: "⭐ Bizning maskan yoqdimi?", bannerText: "2GIS-da sharh qoldirsangiz xursand bo'lamiz!", bannerBtn: "Sharh qoldirish",
-        upsellTitle: "🥤 Ajoyib tanlov!", upsellDesc: "Taomingizga salqin ichimlik qo'shishni xohlaysizmi?", upsellAdd: "Qo'shish", upsellCancel: "Yo'q, rahmat", upsellName: "Фирмавий Лимонад",
+        search: "Qidirish...", bannerTitle: "Bizning maskan yoqdimi?", bannerText: "Fikringizdan mamnun bo'lamiz!", bannerBtn: "2GIS",
+        upsellTitle: "Ajoyib tanlov!", upsellDesc: "Taomingizga salqin ichimlik qo'shishni xohlaysizmi?", upsellAdd: "Qo'shish", upsellCancel: "Yo'q, rahmat", upsellName: "Фирмавий Лимонад",
         cartTitle: "Buyurtmangiz", branchPlaceholder: "Filialni tanlang...", namePlaceholder: "Ismingiz", tablePlaceholder: "Stol raqami yoki manzil", tipsLbl: "Ofitsiantga choypuli:",
-        sumDishes: "Taomlar:", sumService: "Xizmat ko'rsatish (10%):", sumTips: "Choypuli:", toPay: "To'lov uchun:", btnWa: "📱 WhatsApp-ga yuborish", btnClose: "Yopish", cartBar: "🛒 Buyurtma",
+        sumDishes: "Taomlar:", sumService: "Xizmat ko'rsatish (10%):", sumTips: "Choypuli:", toPay: "To'lov uchun:", btnWa: "WhatsApp-ga yuborish", btnClose: "Yopish", cartBar: "Buyurtma",
         progGoal: "Xizmat xaqini olib tashlash uchun yana {diff} buyurtma qiling!", progFree: "🎁 Katta buyurtma uchun bepul xizmat ko'rsatish!",
-        serviceFreeLabel: "0 (100% Chegirma)", emptyCart: "Savat bo'sh!", selectBranch: "Iltimos, filialni tanlang!", waHeader: "Assalomu alaykum! Yangi buyurtma (Al'Ponte):"
+        serviceFreeLabel: "0 (100% Chegirma)", emptyCart: "Savat bo'sh!", selectBranch: "Iltimos, filialni tanlang!", waHeader: "Assalomu alaykum! Yangi buyurtma (Al'Ponte):", waBranch: "Filial", waName: "Ism", waTable: "Stol/manzil", waOrder: "Buyurtma"
       },
       de: {
-        search: "Suchen...", bannerTitle: "⭐ Hat es Ihnen gefallen?", bannerText: "Wir würden uns über Ihre Bewertung auf 2GIS freuen!", bannerBtn: "Bewertung abgeben",
-        upsellTitle: "🥤 Gute Wahl!", upsellDesc: "Möchten Sie ein erfrischendes Getränk zu Ihrem Gericht hinzufügen?", upsellAdd: "Hinzufügen", upsellCancel: "Nein, danke", upsellName: "Hausgemachte Limonade",
+        search: "Suchen...", bannerTitle: "Hat es Ihnen gefallen?", bannerText: "Wir würden uns über Ihre Bewertung freuen!", bannerBtn: "2GIS",
+        upsellTitle: "Gute Wahl!", upsellDesc: "Möchten Sie ein erfrischendes Getränk zu Ihrem Gericht hinzufügen?", upsellAdd: "Hinzufügen", upsellCancel: "Nein, danke", upsellName: "Hausgemachte Limonade",
         cartTitle: "Ihre Bestellung", branchPlaceholder: "Filiale auswählen...", namePlaceholder: "Ihr Name", tablePlaceholder: "Tischnummer oder Adresse", tipsLbl: "Trinkgeld:",
-        sumDishes: "Gerichte:", sumService: "Servicegebühr (10%):", sumTips: "Trinkgeld:", toPay: "Gesamtbetrag:", btnWa: "📱 Per WhatsApp senden", btnClose: "Schließen", cartBar: "🛒 Warenkorb",
+        sumDishes: "Gerichte:", sumService: "Servicegebühr (10%):", sumTips: "Trinkgeld:", toPay: "Gesamtbetrag:", btnWa: "Per WhatsApp senden", btnClose: "Schließen", cartBar: "Warenkorb",
         progGoal: "Bestellen Sie für weitere {diff}, um 10% Servicegebühr zu sparen!", progFree: "🎁 Kostenloser Service für Ihre große Bestellung!",
-        serviceFreeLabel: "0 (100% Rabatt)", emptyCart: "Warenkorb ist leer!", selectBranch: "Bitte wählen Sie eine Filiale!", waHeader: "Hallo! Neue Bestellung (Al'Ponte):"
+        serviceFreeLabel: "0 (100% Rabatt)", emptyCart: "Warenkorb ist leer!", selectBranch: "Bitte wählen Sie eine Filiale!", waHeader: "Hallo! Neue Bestellung (Al'Ponte):", waBranch: "Filiale", waName: "Name", waTable: "Tisch/Adresse", waOrder: "Bestellung"
       },
       fr: {
-        search: "Rechercher...", bannerTitle: "⭐ Vous avez aimé ?", bannerText: "Nous apprécierions votre avis sur 2GIS !", bannerBtn: "Laisser un avis",
-        upsellTitle: "🥤 Excellent choix !", upsellDesc: "Souhaitez-vous ajouter une boisson rafraîchissante ?", upsellAdd: "Ajouter", upsellCancel: "Non, merci", upsellName: "Limonade de la maison",
+        search: "Rechercher...", bannerTitle: "Vous avez aimé ?", bannerText: "Nous apprécierions votre avis !", bannerBtn: "2GIS",
+        upsellTitle: "Excellent choix !", upsellDesc: "Souhaitez-vous ajouter une boisson rafraîchissante ?", upsellAdd: "Ajouter", upsellCancel: "Non, merci", upsellName: "Limonade de la maison",
         cartTitle: "Votre Commande", branchPlaceholder: "Sélectionnez une succursale...", namePlaceholder: "Votre nom", tablePlaceholder: "Numéro de table ou adresse", tipsLbl: "Pourboire :",
-        sumDishes: "Plats :", sumService: "Frais de service (10%) :", sumTips: "Pourboire :", toPay: "Total :", btnWa: "📱 Envoyer via WhatsApp", btnClose: "Fermer", cartBar: "🛒 Panier",
+        sumDishes: "Plats :", sumService: "Frais de service (10%) :", sumTips: "Pourboire :", toPay: "Total :", btnWa: "Envoyer via WhatsApp", btnClose: "Fermer", cartBar: "Panier",
         progGoal: "Ajoutez {diff} de plus pour annuler les 10% de frais de service !", progFree: "🎁 Frais de service OFFERTS pour cette commande !",
-        serviceFreeLabel: "0 (100% Réduction)", emptyCart: "Le panier est vide !", selectBranch: "Veuillez sélectionner une succursale !", waHeader: "Bonjour ! Nouvelle commande (Al'Ponte) :"
+        serviceFreeLabel: "0 (100% Réduction)", emptyCart: "Le panier est vide !", selectBranch: "Veuillez sélectionner une succursale !", waHeader: "Bonjour ! Nouvelle commande (Al'Ponte) :", waBranch: "Succursale", waName: "Nom", waTable: "Table/adresse", waOrder: "Commande"
       },
       es: {
-        search: "Buscar...", bannerTitle: "⭐ ¿Te gustó tu visita?", bannerText: "¡Agradeceríamos tu reseña en 2GIS!", bannerBtn: "Dejar una reseña",
-        upsellTitle: "🥤 ¡Excelente elección!", upsellDesc: "¿Deseas agregar una bebida refrescante a tu pedido?", upsellAdd: "Agregar", upsellCancel: "No, gracias", upsellName: "Limonada de la casa",
+        search: "Buscar...", bannerTitle: "¿Te gustó tu visita?", bannerText: "¡Agradeceríamos tu reseña!", bannerBtn: "2GIS",
+        upsellTitle: "¡Excelente elección!", upsellDesc: "¿Deseas agregar una bebida refrescante a tu pedido?", upsellAdd: "Agregar", upsellCancel: "No, gracias", upsellName: "Limonada de la casa",
         cartTitle: "Tu Pedido", branchPlaceholder: "Selecciona una sucursal...", namePlaceholder: "Tu nombre", tablePlaceholder: "Número de mesa o dirección", tipsLbl: "Propina:",
-        sumDishes: "Platos:", sumService: "Cargo por servicio (10%):", sumTips: "Propina:", toPay: "Total:", btnWa: "📱 Enviar por WhatsApp", btnClose: "Cerrar", cartBar: "🛒 Carrito",
+        sumDishes: "Platos:", sumService: "Cargo por servicio (10%):", sumTips: "Propina:", toPay: "Total:", btnWa: "Enviar por WhatsApp", btnClose: "Cerrar", cartBar: "Carrito",
         progGoal: "¡Agrega {diff} más para eliminar el 10% de cargo por servicio!", progFree: "🎁 ¡Cargo por servicio GRATIS por pedido grande!",
-        serviceFreeLabel: "0 (100% Descuento)", emptyCart: "¡El carrito está vacío!", selectBranch: "¡Por favor selecciona una sucursal!", waHeader: "¡Hola! Nuevo pedido (Al'Ponte):"
+        serviceFreeLabel: "0 (100% Descuento)", emptyCart: "¡El carrito está vacío!", selectBranch: "¡Por favor selecciona una sucursal!", waHeader: "¡Hola! Nuevo pedido (Al'Ponte):", waBranch: "Sucursal", waName: "Nombre", waTable: "Mesa/dirección", waOrder: "Pedido"
       },
       zh: {
-        search: "搜索...", bannerTitle: "⭐ 喜欢我们的餐厅吗？", bannerText: "欢迎在 2GIS 上留下您的宝贵评价！", bannerBtn: "留下评价",
-        upsellTitle: "🥤 绝佳的选择！", upsellDesc: "您想在菜品中加入一杯清凉饮品吗？", upsellAdd: "添加", upsellCancel: "不用了，谢谢", upsellName: "招牌柠檬水",
+        search: "搜索...", bannerTitle: "喜欢我们的餐厅吗？", bannerText: "欢迎留下您的宝贵评价！", bannerBtn: "2GIS",
+        upsellTitle: "绝佳的选择！", upsellDesc: "您想在菜品中加入一杯清凉饮品吗？", upsellAdd: "添加", upsellCancel: "不用了，谢谢", upsellName: "招牌柠檬水",
         cartTitle: "您的订单", branchPlaceholder: "请选择分店...", namePlaceholder: "您的姓名", tablePlaceholder: "桌号或地址", tipsLbl: "给服务员的小费：",
-        sumDishes: "菜品：", sumService: "服务费 (10%)：", sumTips: "小费：", toPay: "应付总额：", btnWa: "📱 通过 WhatsApp 发送", btnClose: "关闭", cartBar: "🛒 购物车",
+        sumDishes: "菜品：", sumService: "服务费 (10%)：", sumTips: "小费：", toPay: "应付总额：", btnWa: "通过 WhatsApp 发送", btnClose: "关闭", cartBar: "购物车",
         progGoal: "再消费 {diff} 即可免除 10% 服务费！", progFree: "🎁 大额订单尊享免服务费优惠！",
-        serviceFreeLabel: "0 (全额减免)", emptyCart: "购物车是空的！", selectBranch: "请选择一家分店！", waHeader: "您好！新订单 (Al'Ponte)："
+        serviceFreeLabel: "0 (全额减免)", emptyCart: "购物车是空的！", selectBranch: "请选择一家分店！", waHeader: "您好！新订单 (Al'Ponte)：", waBranch: "分店", waName: "姓名", waTable: "桌号/地址", waOrder: "订单"
       },
       ko: {
-        search: "검색...", bannerTitle: "⭐ 방문이 만족스러우셨나요?", bannerText: "2GIS에 리뷰를 남겨주시면 큰 힘이 됩니다!", bannerBtn: "리뷰 남기기",
-        upsellTitle: "🥤 탁월한 선택입니다!", upsellDesc: "시원한 음료를 함께 추가하시겠습니까?", upsellAdd: "추가하기", upsellCancel: "괜찮습니다", upsellName: "시그니처 레모네이드",
+        search: "검색...", bannerTitle: "방문이 만족스러우셨나요?", bannerText: "리뷰를 남겨주시면 큰 힘이 됩니다!", bannerBtn: "2GIS",
+        upsellTitle: "탁월한 선택입니다!", upsellDesc: "시원한 음료를 함께 추가하시겠습니까?", upsellAdd: "추가하기", upsellCancel: "괜찮습니다", upsellName: "시그니처 레모네이드",
         cartTitle: "주문 내역", branchPlaceholder: "지점을 선택하세요...", namePlaceholder: "성함", tablePlaceholder: "테이블 번호 또는 주소", tipsLbl: "팁 (팁 금액):",
-        sumDishes: "메뉴 금액:", sumService: "봉사료 (10%):", sumTips: "팁:", toPay: "최종 결제 금액:", btnWa: "📱 WhatsApp으로 전송", btnClose: "닫기", cartBar: "🛒 장바구니",
+        sumDishes: "메뉴 금액:", sumService: "봉사료 (10%):", sumTips: "팁:", toPay: "최종 결제 금액:", btnWa: "WhatsApp으로 전송", btnClose: "닫기", cartBar: "장바구니",
         progGoal: "{diff} 추가 주문 시 10% 봉사료 무료!", progFree: "🎁 대형 주문 무료 봉사료 혜택 적용!",
-        serviceFreeLabel: "0 (100% 할인)", emptyCart: "장바구니가 비어 있습니다!", selectBranch: "지점을 선택해 주세요!", waHeader: "안녕하세요! 새로운 주문입니다 (Al'Ponte):"
+        serviceFreeLabel: "0 (100% 할인)", emptyCart: "장바구니가 비어 있습니다!", selectBranch: "지점을 선택해 주세요!", waHeader: "안녕하세요! 새로운 주문입니다 (Al'Ponte):", waBranch: "지점", waName: "이름", waTable: "테이블/주소", waOrder: "주문"
       }
     };
 
     var FULL_MENU_DATA = {
       food: [
         {
+          titles: { ru: "Готовые сеты", kk: "Дайын сеттер", en: "Ready-made Sets", tr: "Hazır Setler", uz: "Tayyor setlar", de: "Fertige Sets", fr: "Menus prêts", es: "Combos preparados", zh: "套餐", ko: "세트 메뉴" },
+          items: [
+            { ru: "Сет «Доброе утро» — каша, яйца и капучино", kk: "«Қайырлы таң» сеті — ботқа, жұмыртқа және капучино", en: "Good Morning Set — porridge, eggs & cappuccino", price: 3200 },
+            { ru: "Сет «Ланч» — Цезарь с курицей, чечевичный крем-суп и ягодный лимонад", kk: "«Ланч» сеті — тауық қосылған Цезарь, жасымық крем-сорпасы және жидек лимонады", en: "Lunch Set — chicken Caesar, lentil cream soup & berry lemonade", price: 5200 },
+            { ru: "Сет на двоих — бефстроганов, паста карбонара, греческий салат и 2 лимонада", kk: "Екеуге арналған сет — бефстроганов, карбонара пастасы, грек салаты және 2 лимонад", en: "Set for Two — beef stroganoff, carbonara, Greek salad & 2 lemonades", price: 9800 },
+            { ru: "Кофейный сет — капучино и сырники", kk: "Кофе сеті — капучино және сырник", en: "Coffee Set — cappuccino & syrniki", price: 2900 }
+          ]
+        },
+        {
           titles: { ru: "Завтраки", kk: "Таңғы астар", en: "Breakfast", tr: "Kahvaltılar", uz: "Nonushtalar", de: "Frühstück", fr: "Petit-déjeuner", es: "Desayunos", zh: "早餐", ko: "조식" },
           items: [
-            { ru: "Каша", en: "Porridge", price: 1200 },
-            { ru: "Глазунья", en: "Fried eggs", price: 1200 },
-            { ru: "Омлет / Скрэмбл", en: "Omelette / Scramble", price: 1200 },
-            { ru: "Омлет с сыром", en: "Cheese Omelette", price: 1500 },
-            { ru: "Шакшука", en: "Shakshuka", price: 2200 },
-            { ru: "Английский завтрак", en: "English Breakfast", price: 2500 },
-            { ru: "Казахский завтрак", en: "Kazakh Breakfast", price: 3100 },
-            { ru: "Скрэмбл с лососем и авокадо", en: "Salmon & Avocado Scramble", price: 3300 },
-            { ru: "Брускетта с лососем и яйцом пашот", en: "Salmon & Poached Egg Bruschetta", price: 3500 },
-            { ru: "Блины с курицей и грибами (2шт)", en: "Chicken & Mushroom Pancakes (2pcs)", price: 2400 },
-            { ru: "Гречка с курицей и яйцом пашот", en: "Buckwheat with Chicken & Poached Egg", price: 3500 },
-            { ru: "Творог со сметаной", en: "Cottage Cheese with Sour Cream", price: 1200 },
-            { ru: "Творог с йогуртом и голубикой", en: "Cottage Cheese with Yogurt & Blueberries", price: 1900 },
-            { ru: "Блинчики с творогом", en: "Cottage Cheese Pancakes", price: 2100 },
-            { ru: "Сырники со сметаной (3шт)", en: "Syrniki with Sour Cream (3pcs)", price: 2100 }
+            { ru: "Каша", kk: "Ботқа", en: "Porridge", price: 1200 },
+            { ru: "Глазунья", kk: "Қуырылған жұмыртқа", en: "Fried eggs", price: 1200 },
+            { ru: "Омлет / Скрэмбл", kk: "Омлет / Скрембл", en: "Omelette / Scramble", price: 1200 },
+            { ru: "Омлет с сыром", kk: "Ірімшікті омлет", en: "Cheese Omelette", price: 1500 },
+            { ru: "Шакшука", kk: "Шакшука", en: "Shakshuka", price: 2200 },
+            { ru: "Английский завтрак", kk: "Ағылшын таңғы асы", en: "English Breakfast", price: 2500 },
+            { ru: "Казахский завтрак", kk: "Қазақша таңғы ас", en: "Kazakh Breakfast", price: 3100 },
+            { ru: "Скрэмбл с лососем и авокадо", kk: "Албырт пен авокадолы скрембл", en: "Salmon & Avocado Scramble", price: 3300 },
+            { ru: "Брускетта с лососем и яйцом пашот", kk: "Албырт пен пашот жұмыртқасы қосылған брускетта", en: "Salmon & Poached Egg Bruschetta", price: 3500 },
+            { ru: "Блины с курицей и грибами (2шт)", kk: "Тауық пен саңырауқұлақты құймақ (2 дана)", en: "Chicken & Mushroom Pancakes (2pcs)", price: 2400 },
+            { ru: "Гречка с курицей и яйцом пашот", kk: "Тауық пен пашот жұмыртқасы қосылған қарақұмық", en: "Buckwheat with Chicken & Poached Egg", price: 3500 },
+            { ru: "Творог со сметаной", kk: "Қаймақ қосылған сүзбе", en: "Cottage Cheese with Sour Cream", price: 1200 },
+            { ru: "Творог с йогуртом и голубикой", kk: "Йогурт пен көкжидек қосылған сүзбе", en: "Cottage Cheese with Yogurt & Blueberries", price: 1900 },
+            { ru: "Блинчики с творогом", kk: "Сүзбелі құймақ", en: "Cottage Cheese Pancakes", price: 2100 },
+            { ru: "Сырники со сметаной (3шт)", kk: "Қаймақ қосылған сырник (3 дана)", en: "Syrniki with Sour Cream (3pcs)", price: 2100 }
           ]
         },
         {
           titles: { ru: "Салаты и Супы", kk: "Салаттар мен Сорпалар", en: "Salads & Soups", tr: "Salatalar ve Çorbalar", uz: "Salatlar va Sho'rvalar", de: "Salate & Suppen", fr: "Salades & Soupes", es: "Ensaladas y Sopas", zh: "沙拉和汤", ko: "샐러드 및 수프" },
           items: [
-            { ru: "Салат свежий", en: "Fresh Salad", price: 2800 },
-            { ru: "Салат капрезе", en: "Caprese Salad", price: 2900 },
-            { ru: "Салат греческий", en: "Greek Salad", price: 2900 },
-            { ru: "Цезарь с курицей", en: "Chicken Caesar Salad", price: 3200 },
-            { ru: "Цезарь с креветками", en: "Shrimp Caesar Salad", price: 3300 },
-            { ru: "Салат с жареным баклажаном", en: "Crispy Eggplant Salad", price: 3300 },
-            { ru: "Салат тропик", en: "Tropic Salad", price: 3400 },
-            { ru: "Салат с бураттой и томатами", en: "Burrata & Tomato Salad", price: 3300 },
-            { ru: "Теплый салат с телятиной", en: "Warm Veal Salad", price: 3400 },
-            { ru: "Лапша по-домашнему", en: "Homemade Noodle Soup", price: 1800 },
-            { ru: "Чечевичный крем-суп", en: "Lentil Cream Soup", price: 1900 },
-            { ru: "Окрошка мясная", en: "Meat Okroshka", price: 1900 },
-            { ru: "Борщ", en: "Borscht", price: 1900 },
-            { ru: "Пельмени с/без бульона", en: "Pelmeni Dumplings", price: 2300 },
-            { ru: "Рамен курица / говядина", en: "Ramen (Chicken / Beef)", price: 2500 },
-            { ru: "Солянка", en: "Solyanka Soup", price: 3100 },
-            { ru: "Том ям", en: "Tom Yum Soup", price: 3800 }
+            { ru: "Салат свежий", kk: "Жаңа салат", en: "Fresh Salad", price: 2800 },
+            { ru: "Салат капрезе", kk: "Капрезе салаты", en: "Caprese Salad", price: 2900 },
+            { ru: "Салат греческий", kk: "Грек салаты", en: "Greek Salad", price: 2900 },
+            { ru: "Цезарь с курицей", kk: "Тауық қосылған Цезарь салаты", en: "Chicken Caesar Salad", price: 3200 },
+            { ru: "Цезарь с креветками", kk: "Асшаян қосылған Цезарь салаты", en: "Shrimp Caesar Salad", price: 3300 },
+            { ru: "Салат с жареным баклажаном", kk: "Қуырылған баялды қосылған салат", en: "Crispy Eggplant Salad", price: 3300 },
+            { ru: "Салат тропик", kk: "Тропик салаты", en: "Tropic Salad", price: 3400 },
+            { ru: "Салат с бураттой и томатами", kk: "Буррата мен қызанақ қосылған салат", en: "Burrata & Tomato Salad", price: 3300 },
+            { ru: "Теплый салат с телятиной", kk: "Бұзау еті қосылған жылы салат", en: "Warm Veal Salad", price: 3400 },
+            { ru: "Лапша по-домашнему", kk: "Үй кеспесі", en: "Homemade Noodle Soup", price: 1800 },
+            { ru: "Чечевичный крем-суп", kk: "Жасымық крем-сорпасы", en: "Lentil Cream Soup", price: 1900 },
+            { ru: "Окрошка мясная", kk: "Етті окрошка", en: "Meat Okroshka", price: 1900 },
+            { ru: "Борщ", kk: "Борщ", en: "Borscht", price: 1900 },
+            { ru: "Пельмени с/без бульона", kk: "Сорпалы/сорпасыз тұшпара", en: "Pelmeni Dumplings", price: 2300 },
+            { ru: "Рамен курица / говядина", kk: "Тауық / сиыр еті қосылған рамен", en: "Ramen (Chicken / Beef)", price: 2500 },
+            { ru: "Солянка", kk: "Солянка", en: "Solyanka Soup", price: 3100 },
+            { ru: "Том ям", kk: "Том ям", en: "Tom Yum Soup", price: 3800 }
           ]
         },
         {
           titles: { ru: "Горячие Блюда", kk: "Ыстық тағамдар", en: "Main Dishes", tr: "Ana Yemekler", uz: "Issiq taomlar", de: "Hauptgerichte", fr: "Plats Principaux", es: "Platos Principales", zh: "主菜", ko: "메인 요리" },
           items: [
-            { ru: "Лагман цомян / гуйру", en: "Lagman (Tsomyan / Guiru)", price: 3600 },
-            { ru: "Котлеты из говядины с пюре", en: "Beef Cutlets with Mashed Potatoes", price: 4800 },
-            { ru: "Бефстроганов с рисом", en: "Beef Stroganoff with Rice", price: 5200 },
-            { ru: "Казан-кебаб", en: "Kazan Kebab", price: 5100 },
-            { ru: "Жульен в горшочке", en: "Mushroom Julienne", price: 4500 },
-            { ru: "Жареный картофель с мясом", en: "Fried Potatoes with Meat", price: 4500 },
-            { ru: "Бешбармак", en: "Beshbarmak", price: 5200 },
-            { ru: "Стейк рибай / ти-бон", en: "Ribeye / T-Bone Steak", price: 7500 },
-            { ru: "Паста карбонара", en: "Pasta Carbonara", price: 4500 },
-            { ru: "Паста альфредо", en: "Pasta Alfredo", price: 4700 },
-            { ru: "Паста с морепродуктами", en: "Seafood Pasta", price: 4800 }
+            { ru: "Лагман цомян / гуйру", kk: "Цомян / гуйру лағманы", en: "Lagman (Tsomyan / Guiru)", price: 3600 },
+            { ru: "Котлеты из говядины с пюре", kk: "Картоп езбесі қосылған сиыр котлеті", en: "Beef Cutlets with Mashed Potatoes", price: 4800 },
+            { ru: "Бефстроганов с рисом", kk: "Күріш қосылған бефстроганов", en: "Beef Stroganoff with Rice", price: 5200 },
+            { ru: "Казан-кебаб", kk: "Қазан-кебаб", en: "Kazan Kebab", price: 5100 },
+            { ru: "Жульен в горшочке", kk: "Қыш құмырадағы жульен", en: "Mushroom Julienne", price: 4500 },
+            { ru: "Жареный картофель с мясом", kk: "Ет қосылған қуырылған картоп", en: "Fried Potatoes with Meat", price: 4500 },
+            { ru: "Бешбармак", kk: "Бесбармақ", en: "Beshbarmak", price: 5200 },
+            { ru: "Стейк рибай / ти-бон", kk: "Рибай / ти-бон стейкі", en: "Ribeye / T-Bone Steak", price: 7500 },
+            { ru: "Паста карбонара", kk: "Карбонара пастасы", en: "Pasta Carbonara", price: 4500 },
+            { ru: "Паста альфредо", kk: "Альфредо пастасы", en: "Pasta Alfredo", price: 4700 },
+            { ru: "Паста с морепродуктами", kk: "Теңіз өнімдері қосылған паста", en: "Seafood Pasta", price: 4800 }
           ]
         },
         {
           titles: { ru: "Фаст Фуд", kk: "Фаст Фуд", en: "Fast Food", tr: "Fast Food", uz: "Fast-fud", de: "Fast Food", fr: "Fast-food", es: "Comida Rápida", zh: "快餐", ko: "패스트푸드" },
           items: [
-            { ru: "Бургер с курицей и фри", en: "Chicken Burger & Fries", price: 2900 },
-            { ru: "Бургер с говядиной и фри", en: "Beef Burger & Fries", price: 3100 },
-            { ru: "Клаб сендвич с курицей", en: "Chicken Club Sandwich", price: 2800 },
-            { ru: "Клаб сендвич с лососем", en: "Salmon Club Sandwich", price: 2900 },
-            { ru: "Пицца маргарита", en: "Margherita Pizza", price: 2800 },
-            { ru: "Пицца пепперони", en: "Pepperoni Pizza", price: 3100 },
-            { ru: "Пицца четыре сыра", en: "Four Cheese Pizza", price: 3500 }
+            { ru: "Бургер с курицей и фри", kk: "Тауық бургері мен фри", en: "Chicken Burger & Fries", price: 2900 },
+            { ru: "Бургер с говядиной и фри", kk: "Сиыр бургері мен фри", en: "Beef Burger & Fries", price: 3100 },
+            { ru: "Клаб сендвич с курицей", kk: "Тауық қосылған клуб-сэндвич", en: "Chicken Club Sandwich", price: 2800 },
+            { ru: "Клаб сендвич с лососем", kk: "Албырт қосылған клуб-сэндвич", en: "Salmon Club Sandwich", price: 2900 },
+            { ru: "Пицца маргарита", kk: "Маргарита пиццасы", en: "Margherita Pizza", price: 2800 },
+            { ru: "Пицца пепперони", kk: "Пепперони пиццасы", en: "Pepperoni Pizza", price: 3100 },
+            { ru: "Пицца четыре сыра", kk: "Төрт ірімшікті пицца", en: "Four Cheese Pizza", price: 3500 }
           ]
         }
       ],
@@ -441,24 +590,24 @@
         {
           titles: { ru: "Лимонады & Коктейли", kk: "Лимонадтар мен Коктейльдер", en: "Lemonades & Cocktails", tr: "Limonatalar ve Kokteyller", uz: "Limonadlar va Kokteyllar", de: "Limonaden & Cocktails", fr: "Limonades & Cocktails", es: "Limonadas y Cócteles", zh: "柠檬水和鸡尾酒", ko: "레모네이드 및 칵테일" },
           items: [
-            { ru: "Лимонад Манго-маракуйя", en: "Mango Passion Lemonade", price: 2100 },
-            { ru: "Лимонад Мохито", en: "Mojito Lemonade", price: 2100 },
-            { ru: "Лимонад Ягодный", en: "Berry Lemonade", price: 2100 },
-            { ru: "Mojito (alcohol)", en: "Mojito (Alcoholic)", price: 2700 },
-            { ru: "Aperol Spritz", en: "Aperol Spritz", price: 3100 }
+            { ru: "Лимонад Манго-маракуйя", kk: "Манго-маракуйя лимонады", en: "Mango Passion Lemonade", price: 2100 },
+            { ru: "Лимонад Мохито", kk: "Мохито лимонады", en: "Mojito Lemonade", price: 2100 },
+            { ru: "Лимонад Ягодный", kk: "Жидек лимонады", en: "Berry Lemonade", price: 2100 },
+            { ru: "Mojito (alcohol)", kk: "Мохито (алкогольді)", en: "Mojito (Alcoholic)", price: 2700 },
+            { ru: "Aperol Spritz", kk: "Aperol Spritz", en: "Aperol Spritz", price: 3100 }
           ]
         },
         {
           titles: { ru: "Кофе & Чай", kk: "Кофе мен Шай", en: "Coffee & Tea", tr: "Kahve ve Çay", uz: "Kofe va Choy", de: "Kaffee & Tee", fr: "Café & Thé", es: "Café y Té", zh: "咖啡和茶", ko: "커피 및 차" },
           items: [
-            { ru: "Espresso", en: "Espresso", price: 1000 },
-            { ru: "Americano", en: "Americano", price: 1000 },
-            { ru: "Cappuccino", en: "Cappuccino", price: 1500 },
-            { ru: "Latte", en: "Latte", price: 1500 },
-            { ru: "Раф", en: "Raf Coffee", price: 1600 },
-            { ru: "Ташкентский чай", en: "Tashkent Tea", price: 2100 },
-            { ru: "Марокканский чай", en: "Moroccan Tea", price: 2100 },
-            { ru: "Ягодный чай", en: "Berry Tea", price: 2100 }
+            { ru: "Espresso", kk: "Эспрессо", en: "Espresso", price: 1000 },
+            { ru: "Americano", kk: "Американо", en: "Americano", price: 1000 },
+            { ru: "Cappuccino", kk: "Капучино", en: "Cappuccino", price: 1500 },
+            { ru: "Latte", kk: "Латте", en: "Latte", price: 1500 },
+            { ru: "Раф", kk: "Раф кофесі", en: "Raf Coffee", price: 1600 },
+            { ru: "Ташкентский чай", kk: "Ташкент шайы", en: "Tashkent Tea", price: 2100 },
+            { ru: "Марокканский чай", kk: "Марокко шайы", en: "Moroccan Tea", price: 2100 },
+            { ru: "Ягодный чай", kk: "Жидек шайы", en: "Berry Tea", price: 2100 }
           ]
         }
       ]
@@ -467,6 +616,15 @@
     var cart = {};
     var FREE_SERVICE_THRESHOLD = 15000;
     var currentTipPercent = 0;
+    var activeUpsell = null;
+    var upsellShownForCart = false;
+    var pendingUpsellRecommendation = null;
+
+    var UPSELL_FOOD_DESCRIPTIONS = {
+      ru: 'Добавить блюдо к заказу?', kk: 'Тапсырысқа тағам қосу керек пе?', en: 'Would you like to add a dish?',
+      tr: 'Siparişinize bir yemek eklemek ister misiniz?', uz: 'Buyurtmaga taom qo\'shasizmi?', de: 'Möchten Sie ein Gericht hinzufügen?',
+      fr: 'Souhaitez-vous ajouter un plat ?', es: '¿Deseas añadir un plato?', zh: '要加一道菜吗？', ko: '메뉴를 추가하시겠습니까?'
+    };
 
     function formatCurrency(amountKzt) {
       var conf = CURRENCIES[currentLang] || CURRENCIES.ru;
@@ -491,6 +649,7 @@
       applyTranslations();
       buildMenuGrid('food-grid', FULL_MENU_DATA.food, true);
       buildMenuGrid('bar-grid', FULL_MENU_DATA.bar, false);
+      renderCategoryNav(FULL_MENU_DATA.food, true);
       renderCart();
     }
 
@@ -501,6 +660,10 @@
       document.getElementById('banner-title').innerText = t.bannerTitle;
       document.getElementById('banner-text').innerText = t.bannerText;
       document.getElementById('banner-btn').innerText = t.bannerBtn;
+      var help = WHATSAPP_HELP[currentLang] || WHATSAPP_HELP.en;
+      var helpButton = document.getElementById('whatsapp-help-btn');
+      helpButton.innerText = help.label;
+      helpButton.href = 'https://wa.me/77018929830?text=' + encodeURIComponent(help.message);
 
       document.getElementById('upsell-title').innerText = t.upsellTitle;
       document.getElementById('upsell-desc').innerText = t.upsellDesc;
@@ -526,23 +689,41 @@
       var container = document.getElementById(containerId);
       container.innerHTML = '';
       
-      categories.forEach(function(cat) {
+      categories.forEach(function(cat, categoryIndex) {
         var catDiv = document.createElement('div');
-        catDiv.className = 'category';
+        var categoryName = (cat.titles.ru || '').toLowerCase();
+        var categoryType = categoryName.indexOf('сет') !== -1 ? ' featured-category' : (isFoodTab ? ' food-category' : ' bar-category');
+        catDiv.className = 'category' + categoryType;
+        catDiv.id = (isFoodTab ? 'food' : 'bar') + '-category-' + categoryIndex;
         
         var catTitle = document.createElement('h3');
         catTitle.className = 'category-title';
-        catTitle.innerText = cat.titles[currentLang] || cat.titles.ru || cat.titles.en;
+        catTitle.appendChild(document.createTextNode(cat.titles[currentLang] || cat.titles.ru || cat.titles.en));
         catDiv.appendChild(catTitle);
 
         cat.items.forEach(function(item) {
-          var displayName = (currentLang === 'ru' || currentLang === 'kk') ? item.ru : (item.en || item.ru);
+          var displayName = item[currentLang] || item.en || item.ru;
           var itemDiv = document.createElement('div');
           itemDiv.className = 'menu-item';
-          itemDiv.innerHTML = 
-            '<div class="item-names"><span class="name-main">' + displayName + '</span></div>' +
-            '<span class="item-price">' + formatCurrency(item.price) + '</span>' +
-            '<button class="add-cart-btn" onclick="addToCart(\'' + displayName.replace(/'/g, "\\'") + '\', ' + item.price + ', ' + isFoodTab + ')">+</button>';
+          var names = document.createElement('div');
+          names.className = 'item-names';
+          var name = document.createElement('span');
+          name.className = 'name-main';
+          name.textContent = displayName;
+          names.appendChild(name);
+          var price = document.createElement('span');
+          price.className = 'item-price';
+          price.textContent = formatCurrency(item.price);
+          var addButton = document.createElement('button');
+          addButton.className = 'add-cart-btn';
+          addButton.textContent = '+';
+          addButton.setAttribute('aria-label', 'Добавить ' + displayName + ' в корзину');
+          addButton.addEventListener('click', function() {
+            addToCart(displayName, item.price, isFoodTab, getSmartRecommendation(item, isFoodTab), item.ru || item.en, item);
+          });
+          itemDiv.appendChild(names);
+          itemDiv.appendChild(price);
+          itemDiv.appendChild(addButton);
           catDiv.appendChild(itemDiv);
         });
 
@@ -550,33 +731,100 @@
       });
     }
 
-    function addToCart(name, price, isFood) {
-      if (!cart[name]) {
-        cart[name] = { price: price, qty: 1 };
+    function renderCategoryNav(categories, isFoodTab) {
+      var nav = document.getElementById('category-nav');
+      nav.innerHTML = '';
+      categories.forEach(function(cat, categoryIndex) {
+        var button = document.createElement('button');
+        button.className = 'category-nav-btn' + (categoryIndex === 0 ? ' active' : '');
+        button.type = 'button';
+        button.appendChild(document.createTextNode(cat.titles[currentLang] || cat.titles.ru || cat.titles.en));
+        button.addEventListener('click', function() {
+          var buttons = nav.querySelectorAll('.category-nav-btn');
+          for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
+          button.classList.add('active');
+          document.getElementById((isFoodTab ? 'food' : 'bar') + '-category-' + categoryIndex).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        nav.appendChild(button);
+      });
+    }
+
+    function getSmartRecommendation(item, isFood) {
+      var sourceName = (item.ru || item.en || '').toLowerCase();
+
+      if (/сет|set|комбо/.test(sourceName)) return null;
+
+      if (isFood) {
+        if (/каша|глазунья|омлет|блины|гречка|творог|сырники/.test(sourceName)) {
+          return { ru: 'Капучино', kk: 'Капучино', en: 'Cappuccino', price: 1500, isDrink: true };
+        }
+        if (/салат|суп|лапша|окрошка|борщ|пельмени|рамен|солянка|том ям/.test(sourceName)) {
+          return { ru: 'Ягодный лимонад', kk: 'Жидек лимонады', en: 'Berry Lemonade', price: 2100, isDrink: true };
+        }
+        return { ru: 'Лимонад Манго-маракуйя', kk: 'Манго-маракуйя лимонады', en: 'Mango Passion Lemonade', price: 2100, isDrink: true };
+      }
+
+      if (/espresso|americano|cappuccino|latte|раф|чай/.test(sourceName)) {
+        return { ru: 'Сырники со сметаной (3шт)', kk: 'Қаймақ қосылған сырник (3 дана)', en: 'Syrniki with Sour Cream (3pcs)', price: 2100, isDrink: false };
+      }
+      if (/mojito|aperol/.test(sourceName)) {
+        return { ru: 'Пицца пепперони', kk: 'Пепперони пиццасы', en: 'Pepperoni Pizza', price: 3100, isDrink: false };
+      }
+      return { ru: 'Бургер с курицей и фри', kk: 'Тауық бургері мен фри', en: 'Chicken Burger & Fries', price: 2900, isDrink: false };
+    }
+
+    function getLocalizedName(names) {
+      return names[currentLang] || names.en || names.ru;
+    }
+
+    function addToCart(name, price, isFood, recommendation, cartKey, itemData) {
+      var key = cartKey || name;
+      if (!cart[key]) {
+        cart[key] = { price: price, qty: 1, names: itemData || { ru: name } };
       } else {
-        cart[name].qty += 1;
+        cart[key].qty += 1;
       }
       renderCart();
 
-      if (isFood) {
-        document.getElementById('upsell-modal').style.display = 'flex';
+      if (recommendation && !pendingUpsellRecommendation && !upsellShownForCart) {
+        pendingUpsellRecommendation = recommendation;
       }
     }
 
     function addUpsellItem() {
-      var t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ru;
-      addToCart(t.upsellName, 1800, false);
+      if (!activeUpsell) return;
+      var recommendationName = activeUpsell[currentLang] || activeUpsell.en || activeUpsell.ru;
+      addToCart(recommendationName, activeUpsell.price, false, null, activeUpsell.ru || activeUpsell.en, activeUpsell);
       closeUpsell();
     }
 
     function closeUpsell() {
+      activeUpsell = null;
       document.getElementById('upsell-modal').style.display = 'none';
     }
 
-    function changeQty(name, delta) {
-      if (cart[name]) {
-        cart[name].qty += delta;
-        if (cart[name].qty <= 0) delete cart[name];
+    function showPendingUpsell() {
+      if (!pendingUpsellRecommendation || upsellShownForCart) return;
+      upsellShownForCart = true;
+      activeUpsell = pendingUpsellRecommendation;
+      var recommendation = activeUpsell;
+      var t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ru;
+      document.getElementById('upsell-item-name').innerText = recommendation[currentLang] || recommendation.en || recommendation.ru;
+      document.getElementById('upsell-item-price').innerText = formatCurrency(recommendation.price);
+      document.getElementById('upsell-desc').innerText = recommendation.isDrink
+        ? (t.upsellDesc || 'Добавить напиток к заказу?')
+        : (UPSELL_FOOD_DESCRIPTIONS[currentLang] || UPSELL_FOOD_DESCRIPTIONS.en);
+      document.getElementById('upsell-modal').style.display = 'flex';
+    }
+
+    function changeQty(cartKey, delta) {
+      if (cart[cartKey]) {
+        cart[cartKey].qty += delta;
+        if (cart[cartKey].qty <= 0) delete cart[cartKey];
+      }
+      if (Object.keys(cart).length === 0) {
+        upsellShownForCart = false;
+        pendingUpsellRecommendation = null;
       }
       renderCart();
     }
@@ -596,20 +844,36 @@
       var totalQty = 0;
       var t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ru;
 
-      for (var name in cart) {
-        var item = cart[name];
+      for (let cartKey in cart) {
+        let item = cart[cartKey];
+        var name = getLocalizedName(item.names);
         var sum = item.price * item.qty;
         rawTotal += sum;
         totalQty += item.qty;
 
         var row = document.createElement('div');
         row.className = 'cart-item-row';
-        row.innerHTML = '<span>' + name + ' (' + formatCurrency(item.price) + ')</span>' +
-          '<div class="cart-item-qty">' +
-            '<button class="qty-btn" onclick="changeQty(\'' + name.replace(/'/g, "\\'") + '\', -1)">-</button>' +
-            '<span>' + item.qty + '</span>' +
-            '<button class="qty-btn" onclick="changeQty(\'' + name.replace(/'/g, "\\'") + '\', 1)">+</button>' +
-          '</div>';
+        var itemLabel = document.createElement('span');
+        itemLabel.textContent = name + ' (' + formatCurrency(item.price) + ')';
+        var quantity = document.createElement('div');
+        quantity.className = 'cart-item-qty';
+        var decreaseButton = document.createElement('button');
+        decreaseButton.className = 'qty-btn';
+        decreaseButton.textContent = '-';
+        decreaseButton.setAttribute('aria-label', 'Уменьшить количество ' + name);
+        decreaseButton.addEventListener('click', function() { changeQty(cartKey, -1); });
+        var quantityLabel = document.createElement('span');
+        quantityLabel.textContent = item.qty;
+        var increaseButton = document.createElement('button');
+        increaseButton.className = 'qty-btn';
+        increaseButton.textContent = '+';
+        increaseButton.setAttribute('aria-label', 'Увеличить количество ' + name);
+        increaseButton.addEventListener('click', function() { changeQty(cartKey, 1); });
+        quantity.appendChild(decreaseButton);
+        quantity.appendChild(quantityLabel);
+        quantity.appendChild(increaseButton);
+        row.appendChild(itemLabel);
+        row.appendChild(quantity);
         container.appendChild(row);
       }
 
@@ -655,6 +919,7 @@
     }
 
     function toggleCartModal(show) {
+      if (show) showPendingUpsell();
       document.getElementById('cart-modal').style.display = show ? 'flex' : 'none';
     }
 
@@ -676,15 +941,17 @@
 
       var rawTotal = 0;
       var text = t.waHeader + "\n";
-      text += "📍 Branch: " + branch + "\n";
-      text += "👤 Name: " + name + "\n";
-      text += "🪑 Table/Address: " + table + "\n\n";
-      text += "Order:\n";
+      text += t.waBranch + ": " + branch + "\n";
+      text += t.waName + ": " + name + "\n";
+      text += t.waTable + ": " + table + "\n\n";
+      text += t.waOrder + ":\n";
 
-      for (var item in cart) {
-        var sum = cart[item].price * cart[item].qty;
+      for (var cartKey in cart) {
+        var cartItem = cart[cartKey];
+        var itemName = getLocalizedName(cartItem.names);
+        var sum = cartItem.price * cartItem.qty;
         rawTotal += sum;
-        text += "• " + item + " x" + cart[item].qty + " — " + formatCurrency(sum) + "\n";
+        text += "- " + itemName + " x" + cartItem.qty + " — " + formatCurrency(sum) + "\n";
       }
 
       var isServiceFree = rawTotal >= FREE_SERVICE_THRESHOLD;
@@ -697,7 +964,7 @@
       if (currentTipPercent > 0) {
         text += "\n" + t.sumTips + " (" + currentTipPercent + "%): " + formatCurrency(tipAmount);
       }
-      text += "\n\n💰 " + t.toPay + " " + formatCurrency(finalTotal);
+      text += "\n\n" + t.toPay + " " + formatCurrency(finalTotal);
 
       var phone = "77018929830";
       var waUrl = "https://api.whatsapp.com/send?phone=" + phone + "&text=" + encodeURIComponent(text);
@@ -710,6 +977,7 @@
       btn.classList.add('active');
       document.getElementById('tab-food').style.display = tabName === 'food' ? 'block' : 'none';
       document.getElementById('tab-bar').style.display = tabName === 'bar' ? 'block' : 'none';
+      renderCategoryNav(tabName === 'food' ? FULL_MENU_DATA.food : FULL_MENU_DATA.bar, tabName === 'food');
     }
 
     function filterMenu() {
@@ -720,6 +988,7 @@
         menuItems[i].style.display = text.indexOf(query) !== -1 ? 'flex' : 'none';
       }
     }
+
   </script>
 </body>
 </html>
