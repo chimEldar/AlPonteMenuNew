@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al'Ponte — Админ-панель</title>
+<style>
+  :root {
+    --bg: #100a1c;
+    --panel: #1a1128;
+    --panel-2: #221635;
+    --border: rgba(139, 92, 246, 0.25);
+    --purple: #7c3aed;
+    --purple-light: #a78bfa;
+    --purple-dark: #5b21b6;
+    --text: #f1eefc;
+    --muted: #a99fc2;
+    --danger: #e0455f;
+    --success: #2ecc8f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body {
+    background: radial-gradient(circle at 50% 0%, #241740 0%, var(--bg) 70%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px 12px 100px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+
+  /* --- Login --- */
+  #login-screen {
+    min-height: 80vh; display: flex; align-items: center; justify-content: center;
+  }
+  .login-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
+    padding: 32px 26px; width: 100%; max-width: 360px; text-align: center;
+  }
+  .login-card h1 { font-size: 20px; margin-bottom: 4px; }
+  .login-card p { color: var(--muted); font-size: 12px; margin-bottom: 22px; }
+  .field { text-align: left; margin-bottom: 14px; }
+  .field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: .3px; }
+  .field input {
+    width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--panel-2); color: var(--text); font-size: 14px; outline: none;
+  }
+  .field input:focus { border-color: var(--purple); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    border: none; cursor: pointer; border-radius: 10px; font-weight: 600; transition: transform .12s, background .15s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--purple); color: #fff; }
+  .btn-primary:hover { background: var(--purple-dark); }
+  .btn-block { width: 100%; padding: 12px; font-size: 14px; margin-top: 4px; }
+  .btn-ghost { background: transparent; color: var(--purple-light); border: 1px solid var(--border); }
+  .btn-danger { background: rgba(224,69,95,0.15); color: var(--danger); border: 1px solid rgba(224,69,95,0.4); }
+  .btn-sm { padding: 6px 10px; font-size: 12px; }
+  #login-error { color: var(--danger); font-size: 12px; margin-top: 10px; min-height: 14px; }
+
+  /* --- Admin panel --- */
+  #admin-panel { display: none; }
+  .admin-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 18px; flex-wrap: wrap;
+  }
+  .admin-header h1 { font-size: 18px; }
+  .admin-header .user-email { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+  .section-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .section-tab {
+    flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--muted); font-weight: 700; font-size: 13px; letter-spacing: .5px; cursor: pointer;
+  }
+  .section-tab.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+  .add-cat-row { margin-bottom: 16px; }
+
+  .category-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+    padding: 14px; margin-bottom: 14px;
+  }
+  .category-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+  .category-card-head h3 { font-size: 15px; color: var(--purple-light); }
+  .cat-actions { display: flex; gap: 6px; }
+  .icon-btn {
+    background: var(--panel-2); color: var(--muted); border: 1px solid var(--border);
+    border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 13px;
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--purple); }
+
+  .item-row {
+    display: flex; align-items: center; gap: 10px; padding: 8px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-thumb { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; background: var(--panel-2); flex-shrink: 0; }
+  .item-thumb.empty { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 16px; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-info .name { font-size: 13.5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item-info .price { font-size: 12px; color: var(--purple-light); }
+  .item-row-actions { display: flex; gap: 6px; }
+
+  .add-item-btn { margin-top: 8px; width: 100%; padding: 9px; font-size: 12.5px; }
+  .empty-hint { color: var(--muted); font-size: 12px; padding: 10px 0; text-align: center; }
+
+  /* --- Save bar --- */
+  #save-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; padding: 14px 12px;
+    background: linear-gradient(180deg, rgba(16,10,28,0), var(--bg) 30%);
+    display: flex; justify-content: center; z-index: 50;
+  }
+  #save-btn {
+    max-width: 880px; width: 100%; padding: 15px; font-size: 15px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+    box-shadow: 0 8px 22px rgba(124,58,237,0.45);
+  }
+  #save-status { text-align: center; font-size: 11px; color: var(--muted); margin-top: 6px; min-height: 14px; }
+
+  /* --- Modal --- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(6,4,12,0.75); display: none;
+    align-items: center; justify-content: center; z-index: 200; padding: 16px;
+  }
+  .overlay.open { display: flex; }
+  .modal-box {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+    padding: 22px; width: 100%; max-width: 380px;
+  }
+  .modal-box h2 { font-size: 16px; margin-bottom: 16px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
+  .modal-actions .btn { flex: 1; padding: 10px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <h1>Al'Ponte Admin</h1>
+    <p>Вход только для владельца заведения</p>
+    <div class="field">
+      <label for="login-email">Email</label>
+      <input type="email" id="login-email" placeholder="you@example.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="login-pass">Пароль</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary btn-block" id="login-btn">Войти</button>
+    <div id="login-error"></div>
+  </div>
+</div>
+
+<div id="admin-panel" class="wrap">
+  <div class="admin-header">
+    <div>
+      <h1>Панель управления меню</h1>
+      <span class="user-email" id="user-email"></span>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="logout-btn">Выйти</button>
+  </div>
+
+  <div class="section-tabs">
+    <button class="section-tab active" id="tab-food" onclick="switchSection('food')">МЕНЮ</button>
+    <button class="section-tab" id="tab-bar" onclick="switchSection('bar')">БАР</button>
+  </div>
+
+  <div class="add-cat-row">
+    <button class="btn btn-ghost btn-block" onclick="openCategoryModal()">+ Добавить категорию</button>
+  </div>
+
+  <div id="categories-container"></div>
+</div>
+
+<div id="save-bar" style="display:none;">
+  <div style="width:100%; max-width:880px;">
+    <button class="btn btn-primary" id="save-btn" onclick="saveAll()">Сохранить изменения</button>
+    <div id="save-status"></div>
+  </div>
+</div>
+
+<!-- Item modal -->
+<div class="overlay" id="item-modal">
+  <div class="modal-box">
+    <h2 id="item-modal-title">Блюдо</h2>
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="item-name" placeholder="Например: Цезарь с курицей">
+    </div>
+    <div class="field">
+      <label>Цена (тенге)</label>
+      <input type="number" id="item-price" placeholder="2900">
+    </div>
+    <div class="field">
+      <label>Ссылка на фото (URL)</label>
+      <input type="text" id="item-image" placeholder="https://...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeItemModal()">Отмена</button>
+      <button class="btn btn-primary" onclick="submitItemModal()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category modal -->
+<div class="overlay" id="category-modal">
+  <div class="modal-box">
+    <h2 id="category-modal-title">Категория</h2>
+    <div class="field">
+      <label>Название категории</label>
+      <input type="text" id="category-name" placeholder="Например: Салаты и Супы">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCategoryModal()">Отмена</button>
+      <button class="btn btn-primary" onclick="submitCategoryModal()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCWheQqATtvqSnPLISLObtOAeOr_gDDjxE",
+    authDomain: "al-ponte-menu.firebaseapp.com",
+    databaseURL: "https://al-ponte-menu-default-rtdb.firebaseio.com",
+    projectId: "al-ponte-menu",
+    storageBucket: "al-ponte-menu.firebasestorage.app",
+    messagingSenderId: "676028228130",
+    appId: "1:676028228130:web:bfa903f8dcaa228487207b",
+    measurementId: "G-DVEKT6M1YN"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  // Базовые данные, соответствующие текущему меню на сайте (используются, если в Firebase еще нет данных)
+  const SEED_DATA = {
+    food: [
+      { id: 'f0', name: 'Готовые сеты', items: [
+        { id: 'f0i0', name: 'Сет «Доброе утро» — каша, яйца и капучино', price: 3200, image: '' },
+        { id: 'f0i1', name: 'Сет «Ланч» — Цезарь с курицей, чечевичный крем-суп и ягодный лимонад', price: 5200, image: '' },
+        { id: 'f0i2', name: 'Сет на двоих — бефстроганов, паста карбонара, греческий салат и 2 лимонада', price: 9800, image: '' },
+        { id: 'f0i3', name: 'Кофейный сет — капучино и сырники', price: 2900, image: '' }
+      ] },
+      { id: 'f1', name: 'Завтраки', items: [
+        { id: 'f1i0', name: 'Каша', price: 1200, image: '' },
+        { id: 'f1i1', name: 'Глазунья', price: 1200, image: '' },
+        { id: 'f1i2', name: 'Омлет / Скрэмбл', price: 1200, image: '' },
+        { id: 'f1i3', name: 'Омлет с сыром', price: 1500, image: '' },
+        { id: 'f1i4', name: 'Шакшука', price: 2200, image: '' },
+        { id: 'f1i5', name: 'Английский завтрак', price: 2500, image: '' },
+        { id: 'f1i6', name: 'Казахский завтрак', price: 3100, image: '' },
+        { id: 'f1i7', name: 'Скрэмбл с лососем и авокадо', price: 3300, image: '' },
+        { id: 'f1i8', name: 'Брускетта с лососем и яйцом пашот', price: 3500, image: '' },
+        { id: 'f1i9', name: 'Блины с курицей и грибами (2шт)', price: 2400, image: '' },
+        { id: 'f1i10', name: 'Гречка с курицей и яйцом пашот', price: 3500, image: '' },
+        { id: 'f1i11', name: 'Творог со сметаной', price: 1200, image: '' },
+        { id: 'f1i12', name: 'Творог с йогуртом и голубикой', price: 1900, image: '' },
+        { id: 'f1i13', name: 'Блинчики с творогом', price: 2100, image: '' },
+        { id: 'f1i14', name: 'Сырники со сметаной (3шт)', price: 2100, image: '' }
+      ] },
+      { id: 'f2', name: 'Салаты и Супы', items: [
+        { id: 'f2i0', name: 'Салат свежий', price: 2800, image: '' },
+        { id: 'f2i1', name: 'Салат капрезе', price: 2900, image: '' },
+        { id: 'f2i2', name: 'Салат греческий', price: 2900, image: '' },
+        { id: 'f2i3', name: 'Цезарь с курицей', price: 3200, image: '' },
+        { id: 'f2i4', name: 'Цезарь с креветками', price: 3300, image: '' },
+        { id: 'f2i5', name: 'Салат с жареным баклажаном', price: 3300, image: '' },
+        { id: 'f2i6', name: 'Салат тропик', price: 3400, image: '' },
+        { id: 'f2i7', name: 'Салат с бураттой и томатами', price: 3300, image: '' },
+        { id: 'f2i8', name: 'Теплый салат с телятиной', price: 3400, image: '' },
+        { id: 'f2i9', name: 'Лапша по-домашнему', price: 1800, image: '' },
+        { id: 'f2i10', name: 'Чечевичный крем-суп', price: 1900, image: '' },
+        { id: 'f2i11', name: 'Окрошка мясная', price: 1900, image: '' },
+        { id: 'f2i12', name: 'Борщ', price: 1900, image: '' },
+        { id: 'f2i13', name: 'Пельмени с/без бульона', price: 2300, image: '' },
+        { id: 'f2i14', name: 'Рамен курица / говядина', price: 2500, image: '' },
+        { id: 'f2i15', name: 'Солянка', price: 3100, image: '' },
+        { id: 'f2i16', name: 'Том ям', price: 3800, image: '' }
+      ] },
+      { id: 'f3', name: 'Горячие Блюда', items: [
+        { id: 'f3i0', name: 'Лагман цомян / гуйру', price: 3600, image: '' },
+        { id: 'f3i1', name: 'Котлеты из говядины с пюре', price: 4800, image: '' },
+        { id: 'f3i2', name: 'Бефстроганов с рисом', price: 5200, image: '' },
+        { id: 'f3i3', name: 'Казан-кебаб', price: 5100, image: '' },
+        { id: 'f3i4', name: 'Жульен в горшочке', price: 4500, image: '' },
+        { id: 'f3i5', name: 'Жареный картофель с мясом', price: 4500, image: '' },
+        { id: 'f3i6', name: 'Бешбармак', price: 5200, image: '' },
+        { id: 'f3i7', name: 'Стейк рибай / ти-бон', price: 7500, image: '' },
+        { id: 'f3i8', name: 'Паста карбонара', price: 4500, image: '' },
+        { id: 'f3i9', name: 'Паста альфредо', price: 4700, image: '' },
+        { id: 'f3i10', name: 'Паста с морепродуктами', price: 4800, image: '' }
+      ] },
+      { id: 'f4', name: 'Фаст Фуд', items: [
+        { id: 'f4i0', name: 'Бургер с курицей и фри', price: 2900, image: '' },
+        { id: 'f4i1', name: 'Бургер с говядиной и фри', price: 3100, image: '' },
+        { id: 'f4i2', name: 'Клаб сендвич с курицей', price: 2800, image: '' },
+        { id: 'f4i3', name: 'Клаб сендвич с лососем', price: 2900, image: '' },
+        { id: 'f4i4', name: 'Пицца маргарита', price: 2800, image: '' },
+        { id: 'f4i5', name: 'Пицца пепперони', price: 3100, image: '' },
+        { id: 'f4i6', name: 'Пицца четыре сыра', price: 3500, image: '' }
+      ] }
+    ],
+    bar: [
+      { id: 'b0', name: 'Лимонады & Коктейли', items: [
+        { id: 'b0i0', name: 'Лимонад Манго-маракуйя', price: 2100, image: '' },
+        { id: 'b0i1', name: 'Лимонад Мохито', price: 2100, image: '' },
+        { id: 'b0i2', name: 'Лимонад Ягодный', price: 2100, image: '' },
+        { id: 'b0i3', name: 'Mojito (alcohol)', price: 2700, image: '' },
+        { id: 'b0i4', name: 'Aperol Spritz', price: 3100, image: '' }
+      ] },
+      { id: 'b1', name: 'Кофе & Чай', items: [
+        { id: 'b1i0', name: 'Espresso', price: 1000, image: '' },
+        { id: 'b1i1', name: 'Americano', price: 1000, image: '' },
+        { id: 'b1i2', name: 'Cappuccino', price: 1500, image: '' },
+        { id: 'b1i3', name: 'Latte', price: 1500, image: '' },
+        { id: 'b1i4', name: 'Раф', price: 1600, image: '' },
+        { id: 'b1i5', name: 'Ташкентский чай', price: 2100, image: '' },
+        { id: 'b1i6', name: 'Марокканский чай', price: 2100, image: '' },
+        { id: 'b1i7', name: 'Ягодный чай', price: 2100, image: '' }
+      ] }
+    ]
+  };
+
+  let state = null;
+  let currentSection = 'food';
+  let editingItemCtx = null; // { catId, itemId } or { catId } for new
+  let editingCategoryId = null; // id or null for new
+
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  // --- Auth ---
+  document.getElementById('login-btn').addEventListener('click', function() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const errBox = document.getElementById('login-error');
+    errBox.textContent = '';
+    if (!email || !pass) { errBox.textContent = 'Введите email и пароль'; return; }
+    auth.signInWithEmailAndPassword(email, pass).catch(function(err) {
+      errBox.textContent = 'Ошибка входа: неверный email или пароль';
+    });
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', function() {
+    auth.signOut();
+  });
+
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
+      document.getElementById('save-bar').style.display = 'flex';
+      document.getElementById('user-email').textContent = user.email;
+      loadData();
+    } else {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('save-bar').style.display = 'none';
+    }
+  });
+
+  // --- Data loading ---
+  function loadData() {
+    db.ref('menu').once('value').then(function(snap) {
+      state = snap.exists() ? snap.val() : JSON.parse(JSON.stringify(SEED_DATA));
+      if (!state.food) state.food = [];
+      if (!state.bar) state.bar = [];
+      render();
+    }).catch(function() {
+      state = JSON.parse(JSON.stringify(SEED_DATA));
+      render();
+    });
+  }
+
+  function switchSection(section) {
+    currentSection = section;
+    document.getElementById('tab-food').classList.toggle('active', section === 'food');
+    document.getElementById('tab-bar').classList.toggle('active', section === 'bar');
+    render();
+  }
+
+  // --- Render ---
+  function render() {
+    const container = document.getElementById('categories-container');
+    container.innerHTML = '';
+    const categories = state[currentSection] || [];
+
+    if (categories.length === 0) {
+      container.innerHTML = '<div class="empty-hint">Нет категорий. Добавьте первую категорию.</div>';
+      return;
+    }
+
+    categories.forEach(function(cat) {
+      const card = document.createElement('div');
+      card.className = 'category-card';
+
+      const head = document.createElement('div');
+      head.className = 'category-card-head';
+      const title = document.createElement('h3');
+      title.textContent = cat.name;
+      const actions = document.createElement('div');
+      actions.className = 'cat-actions';
+      const editBtn = document.createElement('button');
+      editBtn.className = 'icon-btn'; editBtn.textContent = '✎';
+      editBtn.onclick = function() { openCategoryModal(cat.id); };
+      const delBtn = document.createElement('button');
+      delBtn.className = 'icon-btn'; delBtn.textContent = '🗑';
+      delBtn.onclick = function() { deleteCategory(cat.id); };
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      head.appendChild(title);
+      head.appendChild(actions);
+      card.appendChild(head);
+
+      (cat.items || []).forEach(function(item) {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+
+        let thumb;
+        if (item.image) {
+          thumb = document.createElement('img');
+          thumb.className = 'item-thumb';
+          thumb.src = item.image;
+          thumb.onerror = function() { thumb.style.display = 'none'; };
+        } else {
+          thumb = document.createElement('div');
+          thumb.className = 'item-thumb empty';
+          thumb.textContent = '🍽';
+        }
+
+        const info = document.createElement('div');
+        info.className = 'item-info';
+        const name = document.createElement('span');
+        name.className = 'name'; name.textContent = item.name;
+        const price = document.createElement('span');
+        price.className = 'price'; price.textContent = (item.price || 0).toLocaleString() + ' ₸';
+        info.appendChild(name);
+        info.appendChild(price);
+
+        const rowActions = document.createElement('div');
+        rowActions.className = 'item-row-actions';
+        const itemEditBtn = document.createElement('button');
+        itemEditBtn.className = 'icon-btn'; itemEditBtn.textContent = '✎';
+        itemEditBtn.onclick = function() { openItemModal(cat.id, item.id); };
+        const itemDelBtn = document.createElement('button');
+        itemDelBtn.className = 'icon-btn'; itemDelBtn.textContent = '🗑';
+        itemDelBtn.onclick = function() { deleteItem(cat.id, item.id); };
+        rowActions.appendChild(itemEditBtn);
+        rowActions.appendChild(itemDelBtn);
+
+        row.appendChild(thumb);
+        row.appendChild(info);
+        row.appendChild(rowActions);
+        card.appendChild(row);
+      });
+
+      const addItemBtn = document.createElement('button');
+      addItemBtn.className = 'btn btn-ghost add-item-btn';
+      addItemBtn.textContent = '+ Добавить блюдо';
+      addItemBtn.onclick = function() { openItemModal(cat.id, null); };
+      card.appendChild(addItemBtn);
+
+      container.appendChild(card);
+    });
+  }
+
+  // --- Item modal ---
+  function openItemModal(catId, itemId) {
+    editingItemCtx = { catId: catId, itemId: itemId };
+    const cat = state[currentSection].find(function(c) { return c.id === catId; });
+    const item = itemId ? cat.items.find(function(i) { return i.id === itemId; }) : null;
+    document.getElementById('item-modal-title').textContent = item ? 'Редактировать блюдо' : 'Новое блюдо';
+    document.getElementById('item-name').value = item ? item.name : '';
+    document.getElementById('item-price').value = item ? item.price : '';
+    document.getElementById('item-image').value = item ? (item.image || '') : '';
+    document.getElementById('item-modal').classList.add('open');
+  }
+  function closeItemModal() {
+    document.getElementById('item-modal').classList.remove('open');
+    editingItemCtx = null;
+  }
+  function submitItemModal() {
+    const name = document.getElementById('item-name').value.trim();
+    const price = parseInt(document.getElementById('item-price').value, 10);
+    const image = document.getElementById('item-image').value.trim();
+    if (!name || isNaN(price)) { alert('Укажите название и цену'); return; }
+
+    const cat = state[currentSection].find(function(c) { return c.id === editingItemCtx.catId; });
+    if (editingItemCtx.itemId) {
+      const item = cat.items.find(function(i) { return i.id === editingItemCtx.itemId; });
+      item.name = name; item.price = price; item.image = image;
+    } else {
+      cat.items = cat.items || [];
+      cat.items.push({ id: uid(), name: name, price: price, image: image });
+    }
+    closeItemModal();
+    render();
+  }
+  function deleteItem(catId, itemId) {
+    if (!confirm('Удалить это блюдо?')) return;
+    const cat = state[currentSection].find(function(c) { return c.id === catId; });
+    cat.items = cat.items.filter(function(i) { return i.id !== itemId; });
+    render();
+  }
+
+  // --- Category modal ---
+  function openCategoryModal(catId) {
+    editingCategoryId = catId || null;
+    const cat = catId ? state[currentSection].find(function(c) { return c.id === catId; }) : null;
+    document.getElementById('category-modal-title').textContent = cat ? 'Редактировать категорию' : 'Новая категория';
+    document.getElementById('category-name').value = cat ? cat.name : '';
+    document.getElementById('category-modal').classList.add('open');
+  }
+  function closeCategoryModal() {
+    document.getElementById('category-modal').classList.remove('open');
+    editingCategoryId = null;
+  }
+  function submitCategoryModal() {
+    const name = document.getElementById('category-name').value.trim();
+    if (!name) { alert('Введите название категории'); return; }
+    if (editingCategoryId) {
+      const cat = state[currentSection].find(function(c) { return c.id === editingCategoryId; });
+      cat.name = name;
+    } else {
+      state[currentSection].push({ id: uid(), name: name, items: [] });
+    }
+    closeCategoryModal();
+    render();
+  }
+  function deleteCategory(catId) {
+    if (!confirm('Удалить категорию вместе со всеми блюдами?')) return;
+    state[currentSection] = state[currentSection].filter(function(c) { return c.id !== catId; });
+    render();
+  }
+
+  // --- Save all ---
+  function saveAll() {
+    const statusEl = document.getElementById('save-status');
+    statusEl.textContent = 'Сохранение...';
+    db.ref('menu').set(state).then(function() {
+      statusEl.textContent = 'Сохранено ✓ (' + new Date().toLocaleTimeString() + ')';
+    }).catch(function(err) {
+      statusEl.textContent = 'Ошибка сохранения: ' + err.message;
+    });
+  }
+</script>
+</body>
+</html>

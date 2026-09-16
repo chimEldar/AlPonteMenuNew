@@ -153,6 +153,7 @@
 
     .menu-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 4px 6px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); transition: background 0.2s, transform 0.2s; }
     .menu-item:hover { background: rgba(255,255,255,0.05); transform: translateX(3px); }
+    .item-thumb { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
     .item-names { flex-grow: 1; }
     .name-main { font-weight: 600; color: #fff; font-size: 13px; }
     .item-price { font-weight: bold; color: var(--accent-color); font-size: 13px; white-space: nowrap; margin-right: 6px; }
@@ -393,7 +394,21 @@
     <span id="lbl-cart-bar-title">Заказ</span>: <span id="cart-btn-qty">0</span> | <span id="cart-btn-total">0</span>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyCWheQqATtvqSnPLISLObtOAeOr_gDDjxE",
+      authDomain: "al-ponte-menu.firebaseapp.com",
+      databaseURL: "https://al-ponte-menu-default-rtdb.firebaseio.com",
+      projectId: "al-ponte-menu",
+      storageBucket: "al-ponte-menu.firebasestorage.app",
+      messagingSenderId: "676028228130",
+      appId: "1:676028228130:web:bfa903f8dcaa228487207b",
+      measurementId: "G-DVEKT6M1YN"
+    };
+    try { firebase.initializeApp(firebaseConfig); } catch (e) {}
+
     var currentLang = 'ru';
     var WHATSAPP_HELP = {
       ru: { label: 'Помощь в WhatsApp', message: 'Здравствуйте, мне нужна помощь по меню Al\'Ponte' },
@@ -706,16 +721,57 @@
       document.getElementById('lang-modal').style.display = 'flex';
     }
 
-    function setLanguage(lang) {
+    async function setLanguage(lang) {
       currentLang = lang;
       document.getElementById('lang-modal').style.display = 'none';
       document.getElementById('menu-page').style.display = 'block';
+
+      await menuReadyPromise;
 
       applyTranslations();
       buildMenuGrid('food-grid', FULL_MENU_DATA.food, true);
       buildMenuGrid('bar-grid', FULL_MENU_DATA.bar, false);
       renderCategoryNav(FULL_MENU_DATA.food, true);
       renderCart();
+    }
+
+    // Подтягиваем меню из Firebase (обновленное через admin.html), если оно там есть.
+    // Если Firebase недоступен или пуст, используется исходное меню FULL_MENU_DATA выше.
+    var MENU_LANGS = ['ru', 'kk', 'en', 'tr', 'uz', 'de', 'fr', 'es', 'zh', 'ko'];
+    var menuReadyPromise = loadMenuFromFirebase();
+
+    function loadMenuFromFirebase() {
+      return new Promise(function(resolve) {
+        try {
+          var timeoutId = setTimeout(resolve, 3000);
+          firebase.database().ref('menu').once('value').then(function(snap) {
+            clearTimeout(timeoutId);
+            if (snap.exists()) applyFirebaseMenu(snap.val());
+            resolve();
+          }).catch(function() { clearTimeout(timeoutId); resolve(); });
+        } catch (e) { resolve(); }
+      });
+    }
+
+    function applyFirebaseMenu(data) {
+      function convertCategories(cats) {
+        if (!Array.isArray(cats)) return null;
+        return cats.map(function(cat) {
+          var titles = {};
+          MENU_LANGS.forEach(function(l) { titles[l] = cat.name; });
+          var items = (cat.items || []).map(function(it) {
+            var names = { price: it.price };
+            if (it.image) names.image = it.image;
+            MENU_LANGS.forEach(function(l) { names[l] = it.name; });
+            return names;
+          });
+          return { titles: titles, items: items };
+        });
+      }
+      var food = convertCategories(data.food);
+      var bar = convertCategories(data.bar);
+      if (food) FULL_MENU_DATA.food = food;
+      if (bar) FULL_MENU_DATA.bar = bar;
     }
 
     function applyTranslations() {
@@ -770,6 +826,14 @@
           var displayName = getLocalizedName(item);
           var itemDiv = document.createElement('div');
           itemDiv.className = 'menu-item';
+          if (item.image) {
+            var thumb = document.createElement('img');
+            thumb.className = 'item-thumb';
+            thumb.src = item.image;
+            thumb.alt = '';
+            thumb.onerror = function() { thumb.style.display = 'none'; };
+            itemDiv.appendChild(thumb);
+          }
           var names = document.createElement('div');
           names.className = 'item-names';
           var name = document.createElement('span');
