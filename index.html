@@ -522,9 +522,10 @@
     var FULL_MENU_DATA = {
       food: [
         {
+          id: "f0",
           titles: { ru: "Готовые сеты", kk: "Дайын сеттер", en: "Ready-made Sets", tr: "Hazır Setler", uz: "Tayyor setlar", de: "Fertige Sets", fr: "Menus prêts", es: "Combos preparados", zh: "套餐", ko: "세트 메뉴" },
           items: [
-            { ru: "Сет «Доброе утро» — каша, яйца и капучино", kk: "«Қайырлы таң» сеті — ботқа, жұмыртқа және капучино", en: "Good Morning Set — porridge, eggs & cappuccino", price: 3200 },
+            { id: "f0i0", ru: "Сет «Доброе утро» — каша, яйца и капучино", kk: "«Қайырлы таң» сеті — ботқа, жұмыртқа және капучино", en: "Good Morning Set — porridge, eggs & cappuccino", price: 3200 },
             { ru: "Сет «Ланч» — Цезарь с курицей, чечевичный крем-суп и ягодный лимонад", kk: "«Ланч» сеті — тауық қосылған Цезарь, жасымық крем-сорпасы және жидек лимонады", en: "Lunch Set — chicken Caesar, lentil cream soup & berry lemonade", price: 5200 },
             { ru: "Сет на двоих — бефстроганов, паста карбонара, греческий салат и 2 лимонада", kk: "Екеуге арналған сет — бефстроганов, карбонара пастасы, грек салаты және 2 лимонад", en: "Set for Two — beef stroganoff, carbonara, Greek salad & 2 lemonades", price: 9800 },
             { ru: "Кофейный сет — капучино и сырники", kk: "Кофе сеті — капучино және сырник", en: "Coffee Set — cappuccino & syrniki", price: 2900 }
@@ -754,22 +755,33 @@
     }
 
     function applyFirebaseMenu(data) {
-      function convertCategories(cats) {
+      function normalizeMenuName(name) {
+        return String(name || '').toLowerCase().replace(/[\s"'«»—–-]+/g, '');
+      }
+
+      function convertCategories(cats, defaultCategories) {
         if (!Array.isArray(cats)) return null;
         return cats.map(function(cat) {
-          var titles = {};
-          MENU_LANGS.forEach(function(l) { titles[l] = cat.name; });
+          var defaultCategory = defaultCategories.find(function(defaultCat) {
+            return defaultCat.id === cat.id || normalizeMenuName(defaultCat.titles.ru) === normalizeMenuName(cat.name);
+          });
+          var titles = defaultCategory ? defaultCategory.titles : {};
+          if (!defaultCategory) MENU_LANGS.forEach(function(l) { titles[l] = cat.name; });
           var items = (cat.items || []).map(function(it) {
-            var names = { price: it.price };
+            var defaultItem = defaultCategory && defaultCategory.items.find(function(defaultIt) {
+              return defaultIt.id === it.id || normalizeMenuName(defaultIt.ru) === normalizeMenuName(it.name);
+            });
+            var names = defaultItem ? Object.assign({}, defaultItem, { price: it.price }) : { price: it.price };
+            if (it.translations) Object.assign(names, it.translations);
+            names.ru = it.name;
             if (it.image) names.image = it.image;
-            MENU_LANGS.forEach(function(l) { names[l] = it.name; });
             return names;
           });
           return { titles: titles, items: items };
         });
       }
-      var food = convertCategories(data.food);
-      var bar = convertCategories(data.bar);
+      var food = convertCategories(data.food, FULL_MENU_DATA.food);
+      var bar = convertCategories(data.bar, FULL_MENU_DATA.bar);
       if (food) FULL_MENU_DATA.food = food;
       if (bar) FULL_MENU_DATA.bar = bar;
     }

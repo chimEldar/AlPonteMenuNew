@@ -124,11 +124,16 @@
   .overlay.open { display: flex; }
   .modal-box {
     background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-    padding: 22px; width: 100%; max-width: 380px;
+    padding: 22px; width: 100%; max-width: 560px; max-height: calc(100vh - 32px); overflow-y: auto;
   }
   .modal-box h2 { font-size: 16px; margin-bottom: 16px; }
   .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
   .modal-actions .btn { flex: 1; padding: 10px; font-size: 13px; }
+  .translations { margin: 16px 0; }
+  .translations summary { color: var(--purple-light); cursor: pointer; font-size: 13px; font-weight: 600; }
+  .translation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+  .translation-grid .field { margin-bottom: 0; }
+  @media (max-width: 440px) { .translation-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -194,6 +199,20 @@
       <label>Ссылка на фото (URL)</label>
       <input type="text" id="item-image" placeholder="https://...">
     </div>
+    <details class="translations">
+      <summary>Переводы названия</summary>
+      <div class="translation-grid">
+        <div class="field"><label for="item-name-kk">Қазақша</label><input type="text" id="item-name-kk"></div>
+        <div class="field"><label for="item-name-en">English</label><input type="text" id="item-name-en"></div>
+        <div class="field"><label for="item-name-tr">Türkçe</label><input type="text" id="item-name-tr"></div>
+        <div class="field"><label for="item-name-uz">O'zbekcha</label><input type="text" id="item-name-uz"></div>
+        <div class="field"><label for="item-name-de">Deutsch</label><input type="text" id="item-name-de"></div>
+        <div class="field"><label for="item-name-fr">Français</label><input type="text" id="item-name-fr"></div>
+        <div class="field"><label for="item-name-es">Español</label><input type="text" id="item-name-es"></div>
+        <div class="field"><label for="item-name-zh">中文</label><input type="text" id="item-name-zh"></div>
+        <div class="field"><label for="item-name-ko">한국어</label><input type="text" id="item-name-ko"></div>
+      </div>
+    </details>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeItemModal()">Отмена</button>
       <button class="btn btn-primary" onclick="submitItemModal()">Сохранить</button>
@@ -327,6 +346,7 @@
   let currentSection = 'food';
   let editingItemCtx = null; // { catId, itemId } or { catId } for new
   let editingCategoryId = null; // id or null for new
+  const TRANSLATION_LANGS = ['kk', 'en', 'tr', 'uz', 'de', 'fr', 'es', 'zh', 'ko'];
 
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -476,6 +496,9 @@
     document.getElementById('item-name').value = item ? item.name : '';
     document.getElementById('item-price').value = item ? item.price : '';
     document.getElementById('item-image').value = item ? (item.image || '') : '';
+    TRANSLATION_LANGS.forEach(function(lang) {
+      document.getElementById('item-name-' + lang).value = item && item.translations ? (item.translations[lang] || '') : '';
+    });
     document.getElementById('item-modal').classList.add('open');
   }
   function closeItemModal() {
@@ -486,15 +509,20 @@
     const name = document.getElementById('item-name').value.trim();
     const price = parseInt(document.getElementById('item-price').value, 10);
     const image = document.getElementById('item-image').value.trim();
+    const translations = {};
+    TRANSLATION_LANGS.forEach(function(lang) {
+      const translation = document.getElementById('item-name-' + lang).value.trim();
+      if (translation) translations[lang] = translation;
+    });
     if (!name || isNaN(price)) { alert('Укажите название и цену'); return; }
 
     const cat = state[currentSection].find(function(c) { return c.id === editingItemCtx.catId; });
     if (editingItemCtx.itemId) {
       const item = cat.items.find(function(i) { return i.id === editingItemCtx.itemId; });
-      item.name = name; item.price = price; item.image = image;
+      item.name = name; item.price = price; item.image = image; item.translations = translations;
     } else {
       cat.items = cat.items || [];
-      cat.items.push({ id: uid(), name: name, price: price, image: image });
+      cat.items.push({ id: uid(), name: name, price: price, image: image, translations: translations });
     }
     closeItemModal();
     render();
